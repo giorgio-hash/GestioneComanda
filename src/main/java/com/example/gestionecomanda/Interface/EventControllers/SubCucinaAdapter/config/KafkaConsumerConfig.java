@@ -10,6 +10,6 @@ public class KafkaConsumerConfig {
     @Bean
     public NewTopic createTopic(){
         return new NewTopic("cucina-demo-2",1,(short)1);
-    };
+    }
 
 }

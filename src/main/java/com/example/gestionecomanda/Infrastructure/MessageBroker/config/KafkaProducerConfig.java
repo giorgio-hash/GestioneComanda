@@ -10,6 +10,6 @@ public class KafkaProducerConfig {
     @Bean
     public NewTopic createTopic(){
         return new NewTopic("cucina-demo-1",1,(short)1);
-    };
+    }
 
 }
