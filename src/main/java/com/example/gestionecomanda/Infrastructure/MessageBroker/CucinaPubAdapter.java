@@ -14,7 +14,7 @@ public class CucinaPubAdapter {
     private KafkaTemplate<String,Object> template;
 
     public void sendMessageToTopic(String message){
-        CompletableFuture<SendResult<String, Object>> future = template.send("cucina-demo-1", message).completable();
+        CompletableFuture<SendResult<String, Object>> future = template.send("cucina-demo-1", message);
         future.whenComplete((result,ex)->{
             if(ex == null){
                 System.out.println("Sent Message=[" + message + "] with offset=[" + result.getRecordMetadata().offset() + "]");
