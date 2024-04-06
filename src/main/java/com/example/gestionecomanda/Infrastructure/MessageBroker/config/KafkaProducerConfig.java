@@ -1,15 +1,20 @@
 package com.example.gestionecomanda.Infrastructure.MessageBroker.config;
 
-import org.apache.kafka.clients.admin.NewTopic;
-import org.springframework.context.annotation.Bean;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+@ConfigurationProperties(prefix = "gestionecomanda.gestionecucina")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class KafkaProducerConfig {
 
-    @Bean
-    public NewTopic createTopic(){
-        return new NewTopic("cucina-demo-1",1,(short)1);
-    }
+    private String topic;
 
 }
