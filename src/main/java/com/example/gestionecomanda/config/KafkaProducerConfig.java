@@ -1,4 +1,4 @@
-package com.example.gestionecomanda.Infrastructure.MessageBroker.config;
+package com.example.gestionecomanda.config;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

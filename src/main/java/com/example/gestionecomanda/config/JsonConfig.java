@@ -1,4 +1,4 @@
-package com.example.gestionecomanda.Infrastructure.MessageBroker.config;
+package com.example.gestionecomanda.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;

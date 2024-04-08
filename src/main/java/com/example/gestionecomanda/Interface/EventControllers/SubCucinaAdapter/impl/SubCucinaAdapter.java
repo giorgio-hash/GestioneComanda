@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Log
 public class SubCucinaAdapter implements NotifyPrepEvent {
 
-    @KafkaListener(topics = "cucina.ordini")
+    @KafkaListener(id = "cucina", topics = "cucina.ordini")
     public String listens(final String in) {
         log.info("Consumed: " + in + ", on topic: cucina.ordini");
         return in;

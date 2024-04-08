@@ -1,6 +1,6 @@
 package com.example.gestionecomanda.Infrastructure.MessageBroker;
 
-import com.example.gestionecomanda.Infrastructure.MessageBroker.config.KafkaProducerConfig;
+import com.example.gestionecomanda.config.KafkaProducerConfig;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.java.Log;
