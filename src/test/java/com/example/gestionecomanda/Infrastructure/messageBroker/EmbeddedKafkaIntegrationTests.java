@@ -13,6 +13,7 @@ import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.annotation.DirtiesContext;
 import org.slf4j.LoggerFactory;
 import ch.qos.logback.classic.Logger;
+import com.example.gestionecomanda.util.TestAppender;
 
 import java.util.concurrent.TimeUnit;
 
