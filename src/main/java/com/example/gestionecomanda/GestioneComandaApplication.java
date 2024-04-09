@@ -1,10 +1,7 @@
 package com.example.gestionecomanda;
 
-import com.example.gestionecomanda.Infrastructure.MessageBroker.CucinaPubAdapter;
-import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class GestioneComandaApplication {

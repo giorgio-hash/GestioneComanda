@@ -1,6 +1,6 @@
 package com.example.gestionecomanda.Infrastructure.messageBroker;
 
-import com.example.gestionecomanda.Infrastructure.MessageBroker.CucinaPubAdapter;
+import com.example.gestionecomanda.Infrastructure.MessageBroker.CucinaPubProducer;
 import com.example.gestionecomanda.Interface.EventControllers.SubCucinaAdapter.impl.SubCucinaAdapter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -29,7 +29,7 @@ class EmbeddedKafkaIntegrationTests {
     private SubCucinaAdapter consumer;
 
     @Autowired
-    private CucinaPubAdapter producer;
+    private CucinaPubProducer producer;
 
     @Value("${gestionecomanda.gestionecucina.topic}")
     private String topic;
@@ -53,7 +53,7 @@ class EmbeddedKafkaIntegrationTests {
 
         String data = "test message";
 
-        producer.sendMessageToTopic(data);
+        producer.send(data);
 
         boolean messageConsumed = consumer.getLatch().await(10, TimeUnit.SECONDS);
 
@@ -71,7 +71,7 @@ class EmbeddedKafkaIntegrationTests {
 
         String data = "test message2";
 
-        producer.sendMessageToTopic(data);
+        producer.send(data);
 
         boolean messageConsumed = consumer.getLatch().await(10, TimeUnit.SECONDS);
 

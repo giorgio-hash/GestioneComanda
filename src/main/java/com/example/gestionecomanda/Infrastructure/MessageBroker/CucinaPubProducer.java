@@ -13,20 +13,20 @@ import java.util.concurrent.CompletableFuture;
 
 @Service
 @Log
-public class CucinaPubAdapter {
+public class CucinaPubProducer {
 
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final KafkaProducerConfig kafkaProducerConfig;
     private final ObjectMapper objectMapper;
 
     @Autowired
-    public CucinaPubAdapter (final KafkaTemplate<String, String> kafkaTemplate, final KafkaProducerConfig kafkaProducerConfig, final ObjectMapper objectMapper){
+    public CucinaPubProducer(final KafkaTemplate<String, String> kafkaTemplate, final KafkaProducerConfig kafkaProducerConfig, final ObjectMapper objectMapper){
         this.kafkaTemplate = kafkaTemplate;
         this.kafkaProducerConfig = kafkaProducerConfig;
         this.objectMapper = objectMapper;
     }
 
-    public void sendMessageToTopic(String message) throws JsonProcessingException {
+    public void send(String message) throws JsonProcessingException {
 
         final String payload = objectMapper.writeValueAsString(message);
 

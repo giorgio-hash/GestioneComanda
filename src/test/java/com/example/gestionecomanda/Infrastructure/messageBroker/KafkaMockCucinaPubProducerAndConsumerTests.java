@@ -17,7 +17,7 @@ import java.util.Collections;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Log
-public class KafkaMockProducerAndConsumerTests {
+public class KafkaMockCucinaPubProducerAndConsumerTests {
 
     private MockProducer<String, String> mockProducer;
     private MockConsumer<String, String> mockConsumer;
