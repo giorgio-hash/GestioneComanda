@@ -1,5 +1,7 @@
 package com.example.gestionecomanda.Interface.EventControllers.SubCucinaAdapter;
 
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+
 public interface NotifyPrepEvent {
-    String listens(String message);
+    void receive(ConsumerRecord<?, ?> consumerRecord);
 }

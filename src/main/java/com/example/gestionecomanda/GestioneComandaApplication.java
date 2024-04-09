@@ -15,11 +15,12 @@ public class GestioneComandaApplication {
 
     // TEST
     // Solo per testare che il message broker funziona, all'avvio invia un messaggio sul topic
+    /*
     @Bean
     public ApplicationRunner runner(final CucinaPubAdapter cucinaPubAdapter) {
         return args -> {
             cucinaPubAdapter.sendMessageToTopic("messaggio di default all'avvio");
         };
-    }
+    }*/
 
 }
