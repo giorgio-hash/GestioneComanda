@@ -10,17 +10,23 @@ import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.Duration;
 import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@SpringBootTest
 @Log
 public class KafkaMockCucinaPubProducerAndConsumerTests {
 
     private MockProducer<String, String> mockProducer;
     private MockConsumer<String, String> mockConsumer;
+
+    @Value("${spring.kafka.test.topic}")
+    private String topic;
 
     @BeforeEach
     public void setUp() {
@@ -31,14 +37,14 @@ public class KafkaMockCucinaPubProducerAndConsumerTests {
     @Test
     public void testKafkaProducerConsumer() {
         String message = "test message";
-        String topic = "testTopic";
+        //String topic = "testTopic";
 
-        // Simulate sending a message
+        // Simulo l'invio di un messaggio
         mockProducer.send(new ProducerRecord<>(topic, message));
         mockProducer.flush();
         log.info("Producer sending: " + message);
 
-        // Simulate consuming the message
+        // Simulo la ricezione di un messaggio
         mockConsumer.assign(Collections.singletonList(new TopicPartition(topic, 0)));
         mockConsumer.updateBeginningOffsets(Collections.singletonMap(new TopicPartition(topic, 0), 0L));
         mockConsumer.addRecord(new ConsumerRecord<>(topic, 0, 0L, null, message));

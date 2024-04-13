@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import ch.qos.logback.classic.Logger;
-import com.example.gestionecomanda.GestioneComandaApplication;
 import com.example.gestionecomanda.Infrastructure.MessageBroker.CucinaPubProducer;
 import com.example.gestionecomanda.Interface.EventControllers.SubCucinaAdapter.impl.SubCucinaAdapter;
 import com.example.gestionecomanda.util.TestAppender;
@@ -18,6 +17,7 @@ import org.apache.kafka.common.serialization.StringSerializer;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Test;
+import org.junit.jupiter.api.Order;
 import org.junit.runner.RunWith;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +59,7 @@ public class KafkaTestContainersLiveTests {
     @Autowired
     private CucinaPubProducer producer;
 
-    @Value("${gestionecomanda.gestionecucina.topic}")
+    @Value("${spring.kafka.test.topic}")
     private String topic;
 
     private Logger logger;
@@ -76,6 +76,7 @@ public class KafkaTestContainersLiveTests {
     }
 
     @Test
+    @Order(1)
     public void givenKafkaDockerContainer_whenSendingWithDefaultTemplate_thenMessageReceived() throws Exception {
 
         String data = "messaggio di test inviato dal default template";
@@ -91,6 +92,7 @@ public class KafkaTestContainersLiveTests {
     }
 
     @Test
+    @Order(2)
     public void givenKafkaDockerContainer_whenSendingWithSimpleProducer_thenMessageReceived() throws Exception {
 
         String data = "messaggio di test inviato dal custom producer";
@@ -102,6 +104,7 @@ public class KafkaTestContainersLiveTests {
 
         assertFalse(testAppender.events.isEmpty());
         assertTrue(testAppender.events.get(0).getFormattedMessage().contains("messaggio di test inviato dal custom producer"));
+
         logger.detachAppender(testAppender);
     }
 
@@ -131,6 +134,7 @@ public class KafkaTestContainersLiveTests {
             return props;
         }
 
+
         @Bean
         public ProducerFactory<String, String> producerFactory() {
             Map<String, Object> configProps = new HashMap<>();
@@ -144,6 +148,7 @@ public class KafkaTestContainersLiveTests {
         public KafkaTemplate<String, String> kafkaTemplate() {
             return new KafkaTemplate<>(producerFactory());
         }
+
 
     }
 

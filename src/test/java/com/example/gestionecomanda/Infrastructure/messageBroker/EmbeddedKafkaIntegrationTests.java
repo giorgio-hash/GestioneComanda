@@ -19,6 +19,16 @@ import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Questa classe è un test di integrazione che utilizza un'istanza Embedded Kafka.
+ * @EmbeddedKafka inietta una istanza di EmbeddedKafkaBroker nella nostra classe di test.
+ * Embedded Kafka è una libreria che fornisce istanze di Kafka e Confluent Schema Registry in memoria
+ * per eseguire i test, in modo da non dipendere da un server Kafka esterno.
+ *
+ * Il test in questione si basa sull'ivio di un messeggio da parte del producer e si verifica
+ * semplicemente che è stato ricevuto del consumer, viene utilizzato un topic specifico di test
+ */
+
 @EnableKafka
 @SpringBootTest
 @DirtiesContext
@@ -32,7 +42,7 @@ class EmbeddedKafkaIntegrationTests {
     @Autowired
     private CucinaPubProducer producer;
 
-    @Value("${gestionecomanda.gestionecucina.topic}")
+    @Value("${spring.kafka.test.topic}")
     private String topic;
 
     private Logger logger;

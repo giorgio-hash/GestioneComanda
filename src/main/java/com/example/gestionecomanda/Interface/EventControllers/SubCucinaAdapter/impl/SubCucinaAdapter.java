@@ -15,14 +15,16 @@ public class SubCucinaAdapter {
 
     private CountDownLatch latch = new CountDownLatch(1);
     private final Logger logger = LoggerFactory.getLogger(SubCucinaAdapter.class);
+    private String lastMessageReceived;
 
-    @KafkaListener(id = "cucina", topics = "${gestionecomanda.gestionecucina.topic}")
+    @KafkaListener(id = "${spring.kafka.consumer.gestioneCucina.group-id}", topics = "${spring.kafka.consumer.gestioneCucina.topic}")
     public void receive(@Payload String message,
                         @Header(KafkaHeaders.RECEIVED_TOPIC) String topic,
                         @Header(KafkaHeaders.RECEIVED_PARTITION) Integer partition,
                         @Header(KafkaHeaders.OFFSET) Long offset) {
         logger.info("Received a message {}, from {} topic, " +
                 "{} partition, and {} offset", message.toString(), topic, partition, offset);
+        lastMessageReceived = message.toString();
         latch.countDown();
     }
 
@@ -34,4 +36,7 @@ public class SubCucinaAdapter {
         return latch;
     }
 
+    public String getLastMessageReceived() {
+        return lastMessageReceived;
+    }
 }
