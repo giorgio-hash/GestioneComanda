@@ -13,4 +13,11 @@ public interface NotifyOrderEvent {
      */
     void receive(String message, String topic, Integer partition, Long offset);
 
+    /**
+     * Restituisce l'ultimo messaggio letto dal listener
+     *
+     * @return l'ultimo messaggio letto dal listener
+     */
+    String getLastMessageReceived();
+
 }

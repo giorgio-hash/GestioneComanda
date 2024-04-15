@@ -17,11 +17,22 @@ import java.util.concurrent.CountDownLatch;
 @Log
 public class SubClienteAdapter implements NotifyOrderEvent {
 
+    /**
+     * variabile thread safe che serve per fini di test per verificare che il listener abbia ricevuto un messaggio
+     */
     private CountDownLatch latch = new CountDownLatch(1);
     private final Logger logger = LoggerFactory.getLogger(SubCucinaAdapter.class);
     private String lastMessageReceived;
 
-
+    /**
+     * Riceve un messaggio tramite Kafka dal servizio gestioneCliente in merito all'avvenuta ordinazione
+     * da parte di un cliente
+     *
+     * @param message il corpo del messaggio vero e proprio
+     * @param topic topic del message broker sul quale si riceve il messaggio
+     * @param partition numero di partizione sul quale si riceve il messaggio
+     * @param offset numero di offset che presenta il messaggio ricevuto
+     */
     @KafkaListener(id = "${spring.kafka.consumer.gestioneCliente.group-id}", topics = "${spring.kafka.consumer.gestioneCliente.topic}")
     public void receive(@Payload String message,
                         @Header(KafkaHeaders.RECEIVED_TOPIC) String topic,
@@ -33,14 +44,29 @@ public class SubClienteAdapter implements NotifyOrderEvent {
         latch.countDown();
     }
 
+    /**
+     * resetta il valore del latch
+     */
     public void resetLatch() {
         latch = new CountDownLatch(1);
     }
 
+    /**
+     * restituisce il latch
+     *
+     * @return latch: variabile thread safe che serve per fini di test per verificare
+     * che il listener abbia ricevuto un messaggio
+     */
     public CountDownLatch getLatch() {
         return latch;
     }
 
+    /**
+     * Restituisce l'ultimo messaggio letto dal listener
+     *
+     * @return l'ultimo messaggio letto dal listener
+     */
+    @Override
     public String getLastMessageReceived() {
         return lastMessageReceived;
     }

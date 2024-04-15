@@ -10,6 +10,6 @@ public interface CucinaPubAdapter {
      * @param message oggeto da inviare
      * @throws JsonProcessingException eccezione sollevata nella serializzazione
      */
-    public void sendMessageToTopic(String message) throws JsonProcessingException;
+    void sendMessageToTopic(String message) throws JsonProcessingException;
 
 }

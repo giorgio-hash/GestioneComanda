@@ -1,7 +1,5 @@
 package com.example.gestionecomanda.Interface.EventControllers.SubCucinaAdapter;
 
-import org.apache.kafka.clients.consumer.ConsumerRecord;
-
 public interface NotifyPrepEvent {
 
     /**
@@ -14,5 +12,12 @@ public interface NotifyPrepEvent {
      * @param offset numero di offset che presenta il messaggio ricevuto
      */
     void receive(String message, String topic, Integer partition, Long offset);
+
+    /**
+     * Restituisce l'ultimo messaggio letto dal listener
+     *
+     * @return l'ultimo messaggio letto dal listener
+     */
+    String getLastMessageReceived();
 
 }

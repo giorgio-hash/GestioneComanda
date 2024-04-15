@@ -37,7 +37,7 @@ public class KafkaConfig {
                 .replicas(1)
                 .build();
     }
-    /*
+
     @Bean
     public ProducerFactory<String, String> producerFactory() {
         Map<String, Object> configProps = new HashMap<>();
@@ -51,5 +51,5 @@ public class KafkaConfig {
     public KafkaTemplate<String, String> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
-    */
+
 }

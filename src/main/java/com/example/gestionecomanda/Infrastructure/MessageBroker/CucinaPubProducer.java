@@ -17,9 +17,13 @@ public class CucinaPubProducer {
 
     private final KafkaTemplate<String, String> kafkaTemplate;
 
+    private final ObjectMapper objectMapper;
+
+    /**
+     * topic sul quale è in ascolto la cucina
+     */
     @Value("${spring.kafka.producer.topic}")
     private String topic;
-    private final ObjectMapper objectMapper;
 
     @Autowired
     public CucinaPubProducer(final KafkaTemplate<String, String> kafkaTemplate, final ObjectMapper objectMapper){
@@ -27,6 +31,12 @@ public class CucinaPubProducer {
         this.objectMapper = objectMapper;
     }
 
+    /**
+     * serializza e invia l'oggetto passato come parametro nel topic verso la cucina
+     *
+     * @param message oggetto da inviare
+     * @throws JsonProcessingException eccezione sollevata nella serializzazione
+     */
     public void send(String message) throws JsonProcessingException {
 
         final String payload = objectMapper.writeValueAsString(message);

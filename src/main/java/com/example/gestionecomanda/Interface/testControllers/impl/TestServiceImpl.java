@@ -1,7 +1,10 @@
 package com.example.gestionecomanda.Interface.testControllers.impl;
 
+import com.example.gestionecomanda.Infrastructure.MessageBroker.service.CucinaPubAdapter;
 import com.example.gestionecomanda.Infrastructure.MessageBroker.service.impl.CucinaPubService;
+import com.example.gestionecomanda.Interface.EventControllers.SubClienteAdapter.NotifyOrderEvent;
 import com.example.gestionecomanda.Interface.EventControllers.SubClienteAdapter.impl.SubClienteAdapter;
+import com.example.gestionecomanda.Interface.EventControllers.SubCucinaAdapter.NotifyPrepEvent;
 import com.example.gestionecomanda.Interface.EventControllers.SubCucinaAdapter.impl.SubCucinaAdapter;
 import com.example.gestionecomanda.Interface.testControllers.TestService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -23,9 +26,9 @@ public class TestServiceImpl implements TestService {
 
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final ObjectMapper objectMapper;
-    private CucinaPubService cucinaPubService;
-    private SubClienteAdapter subClienteAdapter;
-    private SubCucinaAdapter subCucinaAdapter;
+    private final CucinaPubAdapter cucinaPubAdapter;
+    private final NotifyOrderEvent notifyOrderEvent;
+    private final NotifyPrepEvent notifyPrepEvent;
     private String lastMessageReceived;
 
     @Autowired
@@ -36,9 +39,9 @@ public class TestServiceImpl implements TestService {
                            final SubCucinaAdapter subCucinaAdapter){
         this.kafkaTemplate = kafkaTemplate;
         this.objectMapper = objectMapper;
-        this.cucinaPubService = cucinaPubService;
-        this.subClienteAdapter = subClienteAdapter;
-        this.subCucinaAdapter = subCucinaAdapter;
+        this.cucinaPubAdapter = cucinaPubService;
+        this.notifyOrderEvent = subClienteAdapter;
+        this.notifyPrepEvent = subCucinaAdapter;
     }
 
     /**
@@ -49,7 +52,7 @@ public class TestServiceImpl implements TestService {
      */
     @Override
     public void sendMessageToTopicSendOrderEvent(String message) throws JsonProcessingException {
-        cucinaPubService.sendMessageToTopic(message);
+        cucinaPubAdapter.sendMessageToTopic(message);
     }
 
     /**
@@ -75,6 +78,11 @@ public class TestServiceImpl implements TestService {
         });
     }
 
+    /**
+     * listener di kafka, resta in ascolto sul topic specificato e
+     * aggiorna lastMessageReceived appena riceve un nuovo messaggio
+     *
+     */
     @KafkaListener(id = "${spring.kafka.producer.group-id}", topics = "${spring.kafka.producer.topic}")
     private void receive(@Payload String message) {
         lastMessageReceived = message.toString();
@@ -97,7 +105,7 @@ public class TestServiceImpl implements TestService {
      */
     @Override
     public Optional<String> peekFromNotifyOrderEvent(){
-        return Optional.ofNullable(subClienteAdapter.getLastMessageReceived());
+        return Optional.ofNullable(notifyOrderEvent.getLastMessageReceived());
     }
 
     /**
@@ -107,7 +115,7 @@ public class TestServiceImpl implements TestService {
      */
     @Override
     public Optional<String> peekFromNotifyPrepEvent(){
-        return Optional.ofNullable(subCucinaAdapter.getLastMessageReceived());
+        return Optional.ofNullable(notifyPrepEvent.getLastMessageReceived());
     }
 
 }
