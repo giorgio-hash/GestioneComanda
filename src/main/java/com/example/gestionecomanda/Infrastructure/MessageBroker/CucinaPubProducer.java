@@ -1,10 +1,10 @@
 package com.example.gestionecomanda.Infrastructure.MessageBroker;
 
-import com.example.gestionecomanda.config.KafkaProducerConfig;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
@@ -16,21 +16,32 @@ import java.util.concurrent.CompletableFuture;
 public class CucinaPubProducer {
 
     private final KafkaTemplate<String, String> kafkaTemplate;
-    private final KafkaProducerConfig kafkaProducerConfig;
+
     private final ObjectMapper objectMapper;
 
+    /**
+     * topic sul quale è in ascolto la cucina
+     */
+    @Value("${spring.kafka.producer.topic}")
+    private String topic;
+
     @Autowired
-    public CucinaPubProducer(final KafkaTemplate<String, String> kafkaTemplate, final KafkaProducerConfig kafkaProducerConfig, final ObjectMapper objectMapper){
+    public CucinaPubProducer(final KafkaTemplate<String, String> kafkaTemplate, final ObjectMapper objectMapper){
         this.kafkaTemplate = kafkaTemplate;
-        this.kafkaProducerConfig = kafkaProducerConfig;
         this.objectMapper = objectMapper;
     }
 
+    /**
+     * serializza e invia l'oggetto passato come parametro nel topic verso la cucina
+     *
+     * @param message oggetto da inviare
+     * @throws JsonProcessingException eccezione sollevata nella serializzazione
+     */
     public void send(String message) throws JsonProcessingException {
 
         final String payload = objectMapper.writeValueAsString(message);
 
-        CompletableFuture<SendResult<String, String>> future = kafkaTemplate.send(kafkaProducerConfig.getTopic(), payload);
+        CompletableFuture<SendResult<String, String>> future = kafkaTemplate.send(topic, payload);
         future.whenComplete((result,ex)->{
             if(ex == null){
                 log.info("Sent Message=[" + payload + "] with offset=[" + result.getRecordMetadata().offset() + "]");
