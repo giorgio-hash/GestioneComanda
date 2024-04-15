@@ -34,3 +34,21 @@ services:
       KAFKA_BROKERCONNECT: "broker:29092"
     depends_on:
       - "broker"
+
+  db:
+    image: mariadb:latest
+    environment:
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_DATABASE: serveeasy
+      MARIADB_USER: user
+      MARIADB_PASSWORD: user
+    healthcheck:
+      test: ["CMD","healthcheck.sh","--su-mysql","--connect","--innodb_initialized"]
+      interval: 30s
+      retries: 3
+      timeout: 30s
+    volumes:
+      - ./db/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+      - ./db/db_data/:/var/lib/mysql
+    ports:
+      - "3306:3306"
