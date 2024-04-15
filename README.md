@@ -1,3 +1,15 @@
+## Command Line Producer
+Utilizzare il seguente comando per pubblicare sul topic specificato un messaggio
+```shell
+docker exec --interactive --tty broker kafka-console-producer --bootstrap-server broker:9092 --topic "sendOrderEvent"
+```
+```shell
+docker exec --interactive --tty broker kafka-console-producer --bootstrap-server broker:9092 --topic "notifyPrepEvent"
+```
+```shell
+docker exec --interactive --tty broker kafka-console-producer --bootstrap-server broker:9092 --topic "notifyOrderEvent"
+```
+
 ## Command Line Consumer
 Utilizzare il seguente comando per restare in ascolto sul topic specifico
 ```shell
@@ -17,10 +29,10 @@ Lo strumento visualizza informazioni circa: brokers, topics, partitions, consume
 
 Apri un browser e vai all'indirizzo http://localhost:9000.
 
-## Test 
-è possibile usufruire di varie API di test per iniettare dell'esterno messaggi verso 
+## Test
+è possibile usufruire di varie API di test per iniettare dell'esterno messaggi verso
 il topic del broker o per fare il percorso opposto e leggere gli ultimi messaggi del topic.
-via [Postman](https://web.postman.co//) tramite l'API all'indirizzo http://localhost:8080/... 
+via [Postman](https://web.postman.co//) tramite l'API all'indirizzo http://localhost:8080/...
 ### topic sendOrderEvent
 ```http request
 POST /test/sendorderevent HTTP/1.1
