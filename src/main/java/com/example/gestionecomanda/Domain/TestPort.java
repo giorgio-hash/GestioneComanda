@@ -1,8 +1,8 @@
 package com.example.gestionecomanda.Domain;
 
-import com.example.gestionecomanda.Domain.DTO.ClienteDTO;
+import com.example.gestionecomanda.Domain.Entity.ClienteEntity;
 
 public interface TestPort {
 
-    Iterable<ClienteDTO> getClienti();
+    Iterable<ClienteEntity> getClienti();
 }
