@@ -1,4 +1,4 @@
-package com.example.gestionecomanda.Domain.entities;
+package com.example.gestionecomanda.Domain.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Ordine {
+public class OrdineDTO {
 
     private int id;
 
