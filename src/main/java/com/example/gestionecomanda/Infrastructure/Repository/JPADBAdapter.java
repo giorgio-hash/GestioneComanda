@@ -1,6 +1,6 @@
 package com.example.gestionecomanda.Infrastructure.Repository;
 
-import com.example.gestionecomanda.Domain.DTO.ClienteEntity;
+import com.example.gestionecomanda.Domain.Entity.ClienteEntity;
 import com.example.gestionecomanda.Domain.DataPort;
 import com.example.gestionecomanda.Domain.Repository.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;

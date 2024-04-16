@@ -1,4 +1,4 @@
-package com.example.gestionecomanda.Domain.DTO;
+package com.example.gestionecomanda.Domain.Entity;
 
 import jakarta.persistence.*;
 

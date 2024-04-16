@@ -1,6 +1,6 @@
 package com.example.gestionecomanda.Interface.testControllers;
 
-import com.example.gestionecomanda.Domain.DTO.ClienteEntity;
+import com.example.gestionecomanda.Domain.Entity.ClienteEntity;
 import com.example.gestionecomanda.Domain.TestPort;
 import com.example.gestionecomanda.Interface.testControllers.impl.TestServiceImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
