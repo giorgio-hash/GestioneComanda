@@ -1,12 +1,12 @@
 package com.example.gestionecomanda.Infrastructure.Repository;
 
-import com.example.gestionecomanda.Domain.DTO.ClienteDTO;
+import com.example.gestionecomanda.Domain.Entity.ClienteEntity;
 import com.example.gestionecomanda.Domain.DataPort;
 import com.example.gestionecomanda.Domain.Repository.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
-@Service
+@Repository
 public class JPADBAdapter implements DataPort {
 
     private final ClienteRepository clrep;
@@ -27,7 +27,7 @@ public class JPADBAdapter implements DataPort {
     }
 
     @Override
-    public Iterable<ClienteDTO> getClienti() {
+    public Iterable<ClienteEntity> getClienti() {
         return clrep.findAll();
     }
 }

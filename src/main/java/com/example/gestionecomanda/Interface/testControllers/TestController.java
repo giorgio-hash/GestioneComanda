@@ -1,5 +1,7 @@
 package com.example.gestionecomanda.Interface.testControllers;
 
+import com.example.gestionecomanda.Domain.Entity.ClienteEntity;
+import com.example.gestionecomanda.Domain.TestPort;
 import com.example.gestionecomanda.Interface.testControllers.impl.TestServiceImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,7 @@ import java.util.Optional;
 public class TestController {
 
     private TestService testService;
+    private TestPort testport;
 
     @Value("${spring.kafka.consumer.gestioneCliente.topic}")
     private String topic_notifyOrderEvent;
@@ -25,9 +28,21 @@ public class TestController {
     private String topic_notifyPrepEvent;
 
     @Autowired
-    public TestController(TestServiceImpl testService) {
+    public TestController(TestServiceImpl testService, TestPort testport) {
         this.testService = testService;
+        this.testport = testport;
     }
+
+
+    /**
+     * Espone una API di GET con la quale è possibile richiedere al database tutti i clienti
+     * @return una lista di oggetti Cliente serializzati
+     */
+    @GetMapping(path = "/test/clienti")
+    public Iterable<ClienteEntity> getClienti(){
+        return testport.getClienti();
+    }
+
 
     /**
      * Espone una API di POST con la quale è possibile iniettare all'interno del broker oggetti al fine di test
