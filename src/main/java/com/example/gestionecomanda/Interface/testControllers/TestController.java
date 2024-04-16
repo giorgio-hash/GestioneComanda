@@ -1,11 +1,10 @@
 package com.example.gestionecomanda.Interface.testControllers;
 
-import com.example.gestionecomanda.Domain.DTO.ClienteDTO;
+import com.example.gestionecomanda.Domain.DTO.ClienteEntity;
 import com.example.gestionecomanda.Domain.TestPort;
 import com.example.gestionecomanda.Interface.testControllers.impl.TestServiceImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +28,7 @@ public class TestController {
     private String topic_notifyPrepEvent;
 
     @Autowired
-    public TestController(TestServiceImpl testService, @Qualifier("gestionePrioritaOrdini") TestPort testport) {
+    public TestController(TestServiceImpl testService, TestPort testport) {
         this.testService = testService;
         this.testport = testport;
     }
@@ -40,7 +39,7 @@ public class TestController {
      * @return una lista di oggetti Cliente serializzati
      */
     @GetMapping(path = "/test/clienti")
-    public Iterable<ClienteDTO> getClienti(){
+    public Iterable<ClienteEntity> getClienti(){
         return testport.getClienti();
     }
 

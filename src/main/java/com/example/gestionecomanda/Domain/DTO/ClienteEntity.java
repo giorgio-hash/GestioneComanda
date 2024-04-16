@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 
 @Entity
 @jakarta.persistence.Table(name = "Cliente", schema = "serveeasy", catalog = "")
-public class ClienteDTO {
+public class ClienteEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @jakarta.persistence.Column(name = "ID", nullable = false, length = 10)
@@ -35,7 +35,7 @@ public class ClienteDTO {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        ClienteDTO that = (ClienteDTO) o;
+        ClienteEntity that = (ClienteEntity) o;
 
         if (tOA != that.tOA) return false;
         if (id != null ? !id.equals(that.id) : that.id != null) return false;
