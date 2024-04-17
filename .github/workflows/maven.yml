@@ -16,9 +16,9 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
+    
+    if: github.ref != 'refs/heads/main'
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK 17
@@ -31,12 +31,11 @@ jobs:
       run: mvn --batch-mode clean verify
       #run: mvn --batch-mode --update-snapshots verify
 
-  packaging:
-
+      
+  build-and-ship:
     runs-on: ubuntu-latest
 
     if: github.ref == 'refs/heads/main'
-    needs: build
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK 17
@@ -45,8 +44,8 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
-    - name: create jar file
-      run: mvn package
+    - name: Run the Maven verify phase
+      run: mvn --batch-mode clean verify
     - name: Build & push docker image
       uses: mr-smithers-excellent/docker-build-push@v5
       with:
