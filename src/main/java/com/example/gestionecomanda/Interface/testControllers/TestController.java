@@ -1,7 +1,12 @@
 package com.example.gestionecomanda.Interface.testControllers;
 
 import com.example.gestionecomanda.Domain.Entity.ClienteEntity;
+import com.example.gestionecomanda.Domain.Entity.OrdineEntity;
 import com.example.gestionecomanda.Domain.TestPort;
+import com.example.gestionecomanda.Domain.dto.OrdineDTO;
+import com.example.gestionecomanda.Domain.mappers.Mapper;
+import com.example.gestionecomanda.Domain.services.OrdineService;
+import com.example.gestionecomanda.Domain.services.impl.OrdineServiceImpl;
 import com.example.gestionecomanda.Interface.testControllers.impl.TestServiceImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +25,8 @@ public class TestController {
 
     private TestService testService;
     private TestPort testport;
+    private Mapper<OrdineEntity, OrdineDTO> ordineMapper;
+    private OrdineService ordineService;
 
     @Value("${spring.kafka.consumer.gestioneCliente.topic}")
     private String topic_notifyOrderEvent;
@@ -28,9 +35,11 @@ public class TestController {
     private String topic_notifyPrepEvent;
 
     @Autowired
-    public TestController(TestServiceImpl testService, TestPort testport) {
+    public TestController(TestService testService, TestPort testport, Mapper<OrdineEntity, OrdineDTO> ordineMapper, OrdineService ordineService) {
         this.testService = testService;
         this.testport = testport;
+        this.ordineMapper = ordineMapper;
+        this.ordineService = ordineService;
     }
 
 
@@ -48,14 +57,17 @@ public class TestController {
      * Espone una API di POST con la quale è possibile iniettare all'interno del broker oggetti al fine di test
      * Si testa il topic sendOrderEvent da gestione comanda verso gestione cucina
      *
-     * @param message contenuto dell'oggetto da iniettare
+     * @param ordineDTO contenuto dell'oggetto da iniettare
      * @return entità risposta che contiene l'oggetto creato e una risposta HTTP associata
      * @throws JsonProcessingException eccezione sollevata dalla serializzazione
      */
     @PostMapping(path = "/test/sendorderevent")
-    public ResponseEntity<String> sendMessageToTopicSendOrderEvent(@RequestBody String message) throws JsonProcessingException {
-        testService.sendMessageToTopicSendOrderEvent(message);
-        return new ResponseEntity<>(message, HttpStatus.CREATED);
+    public ResponseEntity<OrdineDTO> sendMessageToTopicSendOrderEvent(@RequestBody OrdineDTO ordineDTO) throws JsonProcessingException {
+        OrdineEntity ordineEntity = ordineMapper.mapFrom(ordineDTO);
+        OrdineEntity savedOrdineEntity = ordineService.save(ordineEntity);
+        OrdineDTO savedOrdineDTO = ordineMapper.mapTo(savedOrdineEntity);
+        testService.sendMessageToTopicSendOrderEvent(savedOrdineDTO);
+        return new ResponseEntity<>(savedOrdineDTO, HttpStatus.CREATED);
     }
 
     /**

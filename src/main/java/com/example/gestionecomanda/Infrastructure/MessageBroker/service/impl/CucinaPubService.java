@@ -1,5 +1,6 @@
 package com.example.gestionecomanda.Infrastructure.MessageBroker.service.impl;
 
+import com.example.gestionecomanda.Domain.dto.OrdineDTO;
 import com.example.gestionecomanda.Infrastructure.MessageBroker.CucinaPubProducer;
 import com.example.gestionecomanda.Infrastructure.MessageBroker.service.CucinaPubAdapter;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -19,12 +20,12 @@ public class CucinaPubService implements CucinaPubAdapter {
     /**
      * Tramite Kafka invia l'ordine nel topic del message broker correlato con la cucina
      *
-     * @param message oggeto da inviare
+     * @param ordineDTO DTO dell'entita' ordine da inviare
      * @throws JsonProcessingException eccezione sollevata nella serializzazione
      */
     @Override
-    public void sendMessageToTopic(String message) throws JsonProcessingException {
-        cucinaPubProducer.send(message);
+    public void sendMessageToTopic(OrdineDTO ordineDTO) throws JsonProcessingException {
+        cucinaPubProducer.send(ordineDTO);
     }
 
 }

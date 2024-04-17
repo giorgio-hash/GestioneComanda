@@ -1,11 +1,12 @@
 package com.example.gestionecomanda.Infrastructure.messageBroker;
 
 import ch.qos.logback.classic.Logger;
+import com.example.gestionecomanda.Domain.dto.OrdineDTO;
 import com.example.gestionecomanda.Infrastructure.MessageBroker.CucinaPubProducer;
 import com.example.gestionecomanda.util.TestAppender;
+import com.example.gestionecomanda.util.TestDataUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import config.EmbeddedKafkaConfig;
-import lombok.extern.java.Log;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.junit.jupiter.api.*;
@@ -13,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.test.EmbeddedKafkaBroker;
@@ -52,6 +52,8 @@ class CucinaPubProducerTests {
     private CucinaPubProducer producer;
     @Autowired
     private EmbeddedKafkaBroker embeddedKafka;
+    @Autowired
+    private ObjectMapper objectMapper;
     @Value("${spring.kafka.producer.topic}")
     private String topic;
     private Logger logger;
@@ -68,9 +70,10 @@ class CucinaPubProducerTests {
     @Test
     public void testSendingMessage() throws JsonProcessingException {
 
-        String data = "test message";
+        OrdineDTO ordineDTO = TestDataUtil.createOrdineDtoA();
 
-        producer.send(data);
+        producer.send(ordineDTO);
+        String message = objectMapper.writeValueAsString(ordineDTO);
 
         Map<String, Object> consumerProps = KafkaTestUtils.consumerProps("testT", "false", embeddedKafka);
         DefaultKafkaConsumerFactory<Integer, String> cf = new DefaultKafkaConsumerFactory<>(consumerProps);
@@ -80,13 +83,14 @@ class CucinaPubProducerTests {
 
         // testo il corretto invio
         assertFalse(testAppender.events.isEmpty());
-        assertEquals("Sent Message=[\"test message\"] with offset=[0]", testAppender.events.get(0).getFormattedMessage());
+        assertEquals("Sent Message=[" + message + "] with offset=[0]", testAppender.events.get(0).getFormattedMessage());
 
         // testo la corretta ricezione
         assertThat(received.offset()).isEqualTo(0);
         assertThat(received.topic()).isEqualTo(topic);
-        assertThat(received.value()).contains(data);
         assertThat(received.partition()).isEqualTo(0);
+        OrdineDTO ordineDTOReceived = objectMapper.readValue(received.value(),OrdineDTO.class);
+        assertThat(ordineDTOReceived).isEqualTo(ordineDTO);
 
         logger.detachAppender(testAppender);
     }

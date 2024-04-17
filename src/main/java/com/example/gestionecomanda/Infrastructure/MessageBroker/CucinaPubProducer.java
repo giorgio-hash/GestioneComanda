@@ -1,5 +1,6 @@
 package com.example.gestionecomanda.Infrastructure.MessageBroker;
 
+import com.example.gestionecomanda.Domain.dto.OrdineDTO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.java.Log;
@@ -32,15 +33,17 @@ public class CucinaPubProducer {
     }
 
     /**
-     * serializza e invia l'oggetto passato come parametro nel topic verso la cucina
+     * serializza e invia l'oggetto ordine passato come parametro nel topic verso la cucina
      *
-     * @param message oggetto da inviare
+     * @param ordineDTO DTO dell'entita' ordine da inviare
      * @throws JsonProcessingException eccezione sollevata nella serializzazione
      */
-    public void send(String message) throws JsonProcessingException {
+    public void send(OrdineDTO ordineDTO) throws JsonProcessingException {
 
-        final String payload = objectMapper.writeValueAsString(message);
+        // Serializza in un oggetto JSON
+        final String payload = objectMapper.writeValueAsString(ordineDTO);
 
+        // invia messaggio sul topic specificato
         CompletableFuture<SendResult<String, String>> future = kafkaTemplate.send(topic, payload);
         future.whenComplete((result,ex)->{
             if(ex == null){
