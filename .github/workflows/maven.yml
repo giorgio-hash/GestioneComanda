@@ -31,7 +31,10 @@ jobs:
       run: mvn --batch-mode clean verify
       #run: mvn --batch-mode --update-snapshots verify
 
-    - name: Build & push docker image
+  packaging:
+      if: github.ref == 'refs/heads/main'
+      needs: build
+      name: Build & push docker image
       uses: mr-smithers-excellent/docker-build-push@v5
       with:
         image: gchirico1/gestione_comanda
