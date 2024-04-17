@@ -1,5 +1,6 @@
 package com.example.gestionecomanda.Interface.testControllers;
 
+import com.example.gestionecomanda.Domain.dto.OrdineDTO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.util.Optional;
@@ -7,12 +8,12 @@ import java.util.Optional;
 public interface TestService {
 
     /**
-     * Invia sul topic SendOrderEvent un oggetto tramite message broker
+     * Invia sul topic SendOrderEvent un oggetto ordineDTO tramite message broker
      *
-     * @param message oggetto da inviare
-     * @throws JsonProcessingException
+     * @param ordineDTO DTO dell'entita' ordine da inviare
+     * @throws JsonProcessingException eccezione sollevata nella serializzazione
      */
-    void sendMessageToTopicSendOrderEvent(String message) throws JsonProcessingException;
+    void sendMessageToTopicSendOrderEvent(OrdineDTO ordineDTO) throws JsonProcessingException;
 
     /**
      * Invia sul topic specificato un oggetto tramite message broker

@@ -1,8 +1,11 @@
 package com.example.gestionecomanda.Interface.testControllers;
 
 import com.example.gestionecomanda.Domain.Entity.ClienteEntity;
+import com.example.gestionecomanda.Domain.Entity.OrdineEntity;
 import com.example.gestionecomanda.Domain.TestPort;
-import com.example.gestionecomanda.Interface.testControllers.impl.TestServiceImpl;
+import com.example.gestionecomanda.Domain.dto.OrdineDTO;
+import com.example.gestionecomanda.Domain.mappers.Mapper;
+import com.example.gestionecomanda.Domain.services.OrdineService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,11 +18,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
 
+
+/* TODO: mentre le chiamate GET e POST sul topic SendOrderEvent utilizzano già un oggetto ordine,
+ *       gli altri due topic utilizzano ancora una stringa --> sostituire la stringa con un oggetto adeguato
+ */
+
 @RestController
 public class TestController {
 
     private TestService testService;
     private TestPort testport;
+    private Mapper<OrdineEntity, OrdineDTO> ordineMapper;
+    private OrdineService ordineService;
 
     @Value("${spring.kafka.consumer.gestioneCliente.topic}")
     private String topic_notifyOrderEvent;
@@ -28,9 +38,11 @@ public class TestController {
     private String topic_notifyPrepEvent;
 
     @Autowired
-    public TestController(TestServiceImpl testService, TestPort testport) {
+    public TestController(TestService testService, TestPort testport, Mapper<OrdineEntity, OrdineDTO> ordineMapper, OrdineService ordineService) {
         this.testService = testService;
         this.testport = testport;
+        this.ordineMapper = ordineMapper;
+        this.ordineService = ordineService;
     }
 
 
@@ -47,14 +59,17 @@ public class TestController {
      * Espone una API di POST con la quale è possibile iniettare all'interno del broker oggetti al fine di test
      * Si testa il topic sendOrderEvent da gestione comanda verso gestione cucina
      *
-     * @param message contenuto dell'oggetto da iniettare
+     * @param ordineDTO contenuto dell'oggetto da iniettare
      * @return entità risposta che contiene l'oggetto creato e una risposta HTTP associata
      * @throws JsonProcessingException eccezione sollevata dalla serializzazione
      */
     @PostMapping(path = "/test/sendorderevent")
-    public ResponseEntity<String> sendMessageToTopicSendOrderEvent(@RequestBody String message) throws JsonProcessingException {
-        testService.sendMessageToTopicSendOrderEvent(message);
-        return new ResponseEntity<>(message, HttpStatus.CREATED);
+    public ResponseEntity<OrdineDTO> sendMessageToTopicSendOrderEvent(@RequestBody OrdineDTO ordineDTO) throws JsonProcessingException {
+        OrdineEntity ordineEntity = ordineMapper.mapFrom(ordineDTO);
+        OrdineEntity savedOrdineEntity = ordineService.save(ordineEntity);
+        OrdineDTO savedOrdineDTO = ordineMapper.mapTo(savedOrdineEntity);
+        testService.sendMessageToTopicSendOrderEvent(savedOrdineDTO);
+        return new ResponseEntity<>(savedOrdineDTO, HttpStatus.CREATED);
     }
 
     /**
@@ -67,7 +82,7 @@ public class TestController {
     public ResponseEntity<String> peekMessageFromTopicSendOrderEvent() {
         Optional<String> message = testService.peekFromSendOrderEvent();
         if(message.isPresent())
-            return new ResponseEntity<>(message.get(), HttpStatus.CREATED);
+            return new ResponseEntity<>(message.get(), HttpStatus.OK);
         else
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
@@ -96,7 +111,7 @@ public class TestController {
     public ResponseEntity<String> peekMessageFromTopicNotifyOrderEvent() {
         Optional<String> message = testService.peekFromNotifyOrderEvent();
         if(message.isPresent())
-            return new ResponseEntity<>(message.get(), HttpStatus.CREATED);
+            return new ResponseEntity<>(message.get(), HttpStatus.OK);
         else
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
@@ -125,7 +140,7 @@ public class TestController {
     public ResponseEntity<String> peekMessageFromTopicNotifyPrepEvent() {
         Optional<String> message = testService.peekFromNotifyPrepEvent();
         if(message.isPresent())
-            return new ResponseEntity<>(message.get(), HttpStatus.CREATED);
+            return new ResponseEntity<>(message.get(), HttpStatus.OK);
         else
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
