@@ -30,3 +30,20 @@ jobs:
     - name: Run the Maven verify phase
       run: mvn --batch-mode clean verify
       #run: mvn --batch-mode --update-snapshots verify
+
+  packaging:
+
+    runs-on: ubuntu-latest
+
+    if: github.ref == 'refs/heads/main'
+    needs: build
+    steps:
+    - name: Build & push docker image
+      uses: mr-smithers-excellent/docker-build-push@v5
+      with:
+        image: gchirico1/gestione_comanda
+        tags: latest
+        registry: docker.io
+        dockerfile: Dockerfile
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
