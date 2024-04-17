@@ -26,9 +26,12 @@ via [Postman](https://web.postman.co//) tramite l'API all'indirizzo http://local
 POST /test/sendorderevent HTTP/1.1
 Host: localhost:8080
 Content-Type: application/json
-Content-Length: 30
+Content-Length: 41
 
-"messaggio inviato da postman"
+{
+    "id" : 19,
+    "idComanda" : 6
+}
 ``` 
 ```http request
 GET /test/sendorderevent HTTP/1.1
