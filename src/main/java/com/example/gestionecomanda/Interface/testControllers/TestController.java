@@ -43,7 +43,6 @@ public class TestController {
         return testport.getClienti();
     }
 
-
     /**
      * Espone una API di POST con la quale è possibile iniettare all'interno del broker oggetti al fine di test
      * Si testa il topic sendOrderEvent da gestione comanda verso gestione cucina
