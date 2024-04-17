@@ -32,6 +32,9 @@ jobs:
       #run: mvn --batch-mode --update-snapshots verify
 
   packaging:
+
+    runs-on: ubuntu-latest
+
     if: github.ref == 'refs/heads/main'
     needs: build
     steps:
