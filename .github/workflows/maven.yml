@@ -35,6 +35,7 @@ jobs:
   build-and-ship:
     runs-on: ubuntu-latest
 
+
     if: github.ref == 'refs/heads/main' && github.repository == 'giorgio-hash/GestioneComanda'
     steps:
     - uses: actions/checkout@v4
