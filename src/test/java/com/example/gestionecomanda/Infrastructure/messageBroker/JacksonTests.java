@@ -10,7 +10,10 @@ import org.springframework.boot.test.autoconfigure.json.JsonTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-
+/**
+ * Questa è una classe di test per testare la serializzazione e deserializzazione via Jackson
+ * con l'oggetto ObjectMapper
+ */
 @JsonTest
 public class JacksonTests {
 

@@ -6,8 +6,6 @@ import com.example.gestionecomanda.Domain.TestPort;
 import com.example.gestionecomanda.Domain.dto.OrdineDTO;
 import com.example.gestionecomanda.Domain.mappers.Mapper;
 import com.example.gestionecomanda.Domain.services.OrdineService;
-import com.example.gestionecomanda.Domain.services.impl.OrdineServiceImpl;
-import com.example.gestionecomanda.Interface.testControllers.impl.TestServiceImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,6 +17,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
+
+
+/* TODO: mentre le chiamate GET e POST sul topic SendOrderEvent utilizzano già un oggetto ordine,
+ *       gli altri due topic utilizzano ancora una stringa --> sostituire la stringa con un oggetto adeguato
+ */
 
 @RestController
 public class TestController {
@@ -80,7 +83,7 @@ public class TestController {
     public ResponseEntity<String> peekMessageFromTopicSendOrderEvent() {
         Optional<String> message = testService.peekFromSendOrderEvent();
         if(message.isPresent())
-            return new ResponseEntity<>(message.get(), HttpStatus.CREATED);
+            return new ResponseEntity<>(message.get(), HttpStatus.OK);
         else
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
@@ -109,7 +112,7 @@ public class TestController {
     public ResponseEntity<String> peekMessageFromTopicNotifyOrderEvent() {
         Optional<String> message = testService.peekFromNotifyOrderEvent();
         if(message.isPresent())
-            return new ResponseEntity<>(message.get(), HttpStatus.CREATED);
+            return new ResponseEntity<>(message.get(), HttpStatus.OK);
         else
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
@@ -138,7 +141,7 @@ public class TestController {
     public ResponseEntity<String> peekMessageFromTopicNotifyPrepEvent() {
         Optional<String> message = testService.peekFromNotifyPrepEvent();
         if(message.isPresent())
-            return new ResponseEntity<>(message.get(), HttpStatus.CREATED);
+            return new ResponseEntity<>(message.get(), HttpStatus.OK);
         else
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }

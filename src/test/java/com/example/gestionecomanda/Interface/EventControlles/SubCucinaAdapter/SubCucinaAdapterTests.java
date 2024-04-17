@@ -43,8 +43,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @Log
 @EmbeddedKafka(partitions = 1,
         controlledShutdown = false,
-        brokerProperties = { "listeners=PLAINTEXT://localhost:9092", "port=29092" },
-        topics = {"${spring.kafka.producer.topic}"})
+        brokerProperties = { "listeners=PLAINTEXT://localhost:9092", "port=9092" },
+        topics = {"${spring.kafka.consumer.gestioneCucina.topic}"})
 public class SubCucinaAdapterTests {
 
     @Autowired
