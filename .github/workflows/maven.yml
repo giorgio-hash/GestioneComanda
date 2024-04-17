@@ -38,6 +38,7 @@ jobs:
     if: github.ref == 'refs/heads/main'
     needs: build
     steps:
+    - uses: actions/checkout@v4
     - name: Build & push docker image
       uses: mr-smithers-excellent/docker-build-push@v5
       with:
