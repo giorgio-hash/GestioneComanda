@@ -1,5 +1,6 @@
 package com.example.gestionecomanda.Interface.testControllers.impl;
 
+import com.example.gestionecomanda.Domain.dto.OrdineDTO;
 import com.example.gestionecomanda.Infrastructure.MessageBroker.service.CucinaPubAdapter;
 import com.example.gestionecomanda.Infrastructure.MessageBroker.service.impl.CucinaPubService;
 import com.example.gestionecomanda.Interface.EventControllers.SubClienteAdapter.NotifyOrderEvent;
@@ -34,25 +35,25 @@ public class TestServiceImpl implements TestService {
     @Autowired
     public TestServiceImpl(final KafkaTemplate<String, String> kafkaTemplate,
                            final ObjectMapper objectMapper,
-                           final CucinaPubService cucinaPubService,
-                           final SubClienteAdapter subClienteAdapter,
-                           final SubCucinaAdapter subCucinaAdapter){
+                           final CucinaPubAdapter cucinaPubAdapter,
+                           final NotifyOrderEvent notifyOrderEvent,
+                           final NotifyPrepEvent notifyPrepEvent){
         this.kafkaTemplate = kafkaTemplate;
         this.objectMapper = objectMapper;
-        this.cucinaPubAdapter = cucinaPubService;
-        this.notifyOrderEvent = subClienteAdapter;
-        this.notifyPrepEvent = subCucinaAdapter;
+        this.cucinaPubAdapter = cucinaPubAdapter;
+        this.notifyOrderEvent = notifyOrderEvent;
+        this.notifyPrepEvent = notifyPrepEvent;
     }
 
     /**
-     * Invia sul topic SendOrderEvent un oggetto tramite message broker
+     * Invia sul topic SendOrderEvent un oggetto ordineDTO tramite message broker
      *
-     * @param message oggetto da inviare
-     * @throws JsonProcessingException
+     * @param ordineDTO DTO dell'entita' ordine da inviare
+     * @throws JsonProcessingException eccezione sollevata nella serializzazione
      */
     @Override
-    public void sendMessageToTopicSendOrderEvent(String message) throws JsonProcessingException {
-        cucinaPubAdapter.sendMessageToTopic(message);
+    public void sendMessageToTopicSendOrderEvent(OrdineDTO ordineDTO) throws JsonProcessingException {
+        cucinaPubAdapter.sendMessageToTopic(ordineDTO);
     }
 
     /**
