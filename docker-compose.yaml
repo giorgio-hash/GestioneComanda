@@ -2,31 +2,6 @@
 version: '3.4'
 services:
 
-  GestioneComanda:
-    image: serveeasy/gestione_comanda:latest
-    build: .
-    container_name: GestioneComanda
-    restart: always
-    environment:
-      SERVER_PORT: 8080
-      SERVER_ADDRESS: 0.0.0.0
-      SPRING_DATASOURCE_URL: jdbc:mariadb://db:3306/serveeasy
-      SPRING_KAFKA_BOOTSTRAP-SERVERS: broker:29092 #plaintext_internal
-    depends_on:
-      db:
-        condition: service_healthy
-      broker:
-        condition: service_started
-    healthcheck:
-      test: "curl --fail --silent localhost:8080/actuator/health | grep UP || exit 1"
-      interval: 20s
-      timeout: 5s
-      start_period: 40s
-    expose:
-      - "8080"
-    ports:
-      - "8080:8080"
-
   zookeeper:
     image: confluentinc/cp-zookeeper:7.3.0
     container_name: zookeeper
