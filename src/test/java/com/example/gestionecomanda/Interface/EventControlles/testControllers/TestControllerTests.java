@@ -18,6 +18,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+
+import static com.example.gestionecomanda.util.TestUtil.formattedTimestamp;
+
 
 /* TODO: mentre le chiamate GET e POST sul topic SendOrderEvent utilizzano già un oggetto ordine,
  *       gli altri due topic utilizzano ancora una stringa --> sostituire la stringa con un oggetto adeguato
@@ -81,14 +86,21 @@ public class TestControllerTests {
                 MockMvcResultMatchers.jsonPath("$.id").value(ordineDTO.getId())
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$.idComanda").value(ordineDTO.getIdComanda())
-        );
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.idPiatto").value(ordineDTO.getIdPiatto())
+        ).andExpect(
+                 MockMvcResultMatchers.jsonPath("$.stato").value(ordineDTO.getStato())
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.tordinazione").value(formattedTimestamp(ordineDTO.getTOrdinazione()))
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.urgenzaCliente").value(ordineDTO.getUrgenzaCliente()));
     }
 
     @Test
     public void testThatPeekMessageFromTopicSendOrderEventReturnsHttpStatus200WhenOrderExist() throws Exception {
         OrdineDTO ordineDTO = TestDataUtil.createOrdineDtoA();
         testService.sendMessageToTopicSendOrderEvent(ordineDTO);
-        Thread.sleep(3000);
+        Thread.sleep(5000);
 
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/test/sendorderevent")
@@ -100,7 +112,7 @@ public class TestControllerTests {
     public void testThatPeekMessageFromTopicSendOrderEventReturnsOrderWhenOrderExist() throws Exception {
         OrdineDTO ordineDTO = TestDataUtil.createOrdineDtoA();
         testService.sendMessageToTopicSendOrderEvent(ordineDTO);
-        Thread.sleep(3000);
+        Thread.sleep(5000);
 
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/test/sendorderevent")
@@ -109,7 +121,14 @@ public class TestControllerTests {
                 MockMvcResultMatchers.jsonPath("$.id").value(ordineDTO.getId())
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$.idComanda").value(ordineDTO.getIdComanda())
-        );
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.idPiatto").value(ordineDTO.getIdPiatto())
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.stato").value(ordineDTO.getStato())
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.tordinazione").value(formattedTimestamp(ordineDTO.getTOrdinazione()))
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.urgenzaCliente").value(ordineDTO.getUrgenzaCliente()));
     }
 
     /* /test/notifyorderevent */
@@ -133,7 +152,7 @@ public class TestControllerTests {
         String notifica = "notifica di test";
         testService.sendMessageToTopic(notifica, topic_notifyOrderEvent);
 
-        Thread.sleep(3000);
+        Thread.sleep(5000);
 
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/test/notifyorderevent")
@@ -145,7 +164,7 @@ public class TestControllerTests {
     public void testThatPeekMessageFromTopicNotifyOrderEventReturnsOrderWhenOrderExist() throws Exception {
         String notifica = "notifica di test";
         testService.sendMessageToTopic(notifica, topic_notifyOrderEvent);
-        Thread.sleep(3000);
+        Thread.sleep(5000);
 
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/test/notifyorderevent")
@@ -174,7 +193,7 @@ public class TestControllerTests {
     public void testThatPeekMessageFromTopicNotifyPrepEventReturnsHttpStatus200WhenOrderExist() throws Exception {
         String notifica = "notifica di test";
         testService.sendMessageToTopic(notifica, topic_notifyPrepEvent);
-        Thread.sleep(3000);
+        Thread.sleep(5000);
 
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/test/notifyprepevent")
@@ -186,7 +205,7 @@ public class TestControllerTests {
     public void testThatPeekMessageFromTopicNotifyPrepEventReturnsOrderWhenOrderExist() throws Exception {
         String notifica = "notifica di test";
         testService.sendMessageToTopic(notifica, topic_notifyPrepEvent);
-        Thread.sleep(3000);
+        Thread.sleep(5000);
 
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/test/notifyprepevent")
@@ -194,6 +213,7 @@ public class TestControllerTests {
         ).andExpect(
                 MockMvcResultMatchers.content().string("\"" + notifica + "\""));
     }
+
 
 
 }

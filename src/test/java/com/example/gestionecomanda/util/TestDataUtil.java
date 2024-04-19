@@ -12,6 +12,10 @@ public class TestDataUtil {
         return OrdineEntity.builder()
                 .id(22)
                 .idComanda(7)
+                .idPiatto("RIS188")
+                .stato(1)
+                .tOrdinazione(new java.sql.Timestamp(System.currentTimeMillis()))
+                .urgenzaCliente(0)
                 .build();
     }
 
@@ -19,6 +23,10 @@ public class TestDataUtil {
         return OrdineDTO.builder()
                 .id(22)
                 .idComanda(7)
+                .idPiatto("RIS188")
+                .stato(1)
+                .tOrdinazione(new java.sql.Timestamp(System.currentTimeMillis()))
+                .urgenzaCliente(0)
                 .build();
     }
 
@@ -26,6 +34,10 @@ public class TestDataUtil {
         return OrdineEntity.builder()
                 .id(16)
                 .idComanda(1)
+                .idPiatto("SPA279")
+                .stato(1)
+                .tOrdinazione(new java.sql.Timestamp(System.currentTimeMillis()))
+                .urgenzaCliente(1)
                 .build();
     }
 
@@ -33,6 +45,10 @@ public class TestDataUtil {
         return OrdineDTO.builder()
                 .id(16)
                 .idComanda(1)
+                .idPiatto("SPA279")
+                .stato(1)
+                .tOrdinazione(new java.sql.Timestamp(System.currentTimeMillis()))
+                .urgenzaCliente(1)
                 .build();
     }
 
@@ -40,6 +56,10 @@ public class TestDataUtil {
         return OrdineEntity.builder()
                 .id(99)
                 .idComanda(37)
+                .idPiatto("PES789")
+                .stato(0)
+                .tOrdinazione(new java.sql.Timestamp(System.currentTimeMillis()))
+                .urgenzaCliente(0)
                 .build();
     }
 
@@ -47,6 +67,10 @@ public class TestDataUtil {
         return OrdineDTO.builder()
                 .id(99)
                 .idComanda(37)
+                .idPiatto("PES789")
+                .stato(0)
+                .tOrdinazione(new java.sql.Timestamp(System.currentTimeMillis()))
+                .urgenzaCliente(0)
                 .build();
     }
 
