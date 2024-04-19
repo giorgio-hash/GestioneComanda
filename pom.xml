@@ -111,6 +111,14 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- mariadb testcontainers -->
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>mariadb</artifactId>
+            <version>1.19.7</version>
+            <scope>test</scope>
+        </dependency>
+
         <!-- actuator-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
