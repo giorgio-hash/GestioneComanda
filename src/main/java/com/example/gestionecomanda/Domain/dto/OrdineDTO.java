@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Timestamp;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -14,5 +16,13 @@ public class OrdineDTO {
     private int id;
 
     private int idComanda;
+
+    private String idPiatto;
+
+    private Integer stato;
+
+    private Timestamp tOrdinazione;
+
+    private Integer urgenzaCliente;
 
 }

@@ -40,6 +40,10 @@ public class JPADBAdapter implements DataPort {
      */
     @Override
     public OrdineEntity save(OrdineEntity ordineEntity) {
+        // TODO: Salvare l'entità nel database !
         return ordineEntity;
     }
+
+    // TODO: Creare metodo per estrarre un ordine dal DB
+
 }
