@@ -38,11 +38,15 @@ via [Postman](https://web.postman.co//) tramite l'API all'indirizzo http://local
 POST /test/sendorderevent HTTP/1.1
 Host: localhost:8080
 Content-Type: application/json
-Content-Length: 41
+Content-Length: 151
 
 {
-    "id" : 19,
-    "idComanda" : 6
+    "id":22,
+    "idComanda":7,
+    "idPiatto":"SUH724",
+    "stato":1,
+    "urgenzaCliente":0,
+    "tordinazione":"2024-04-25 12:04:57.127"
 }
 ``` 
 ```http request
