@@ -1,11 +1,11 @@
 package com.example.gestionecomanda.Interface.testControllers;
 
+import com.example.gestionecomanda.Domain.DataPort;
 import com.example.gestionecomanda.Domain.Entity.ClienteEntity;
 import com.example.gestionecomanda.Domain.Entity.OrdineEntity;
 import com.example.gestionecomanda.Domain.TestPort;
 import com.example.gestionecomanda.Domain.dto.OrdineDTO;
 import com.example.gestionecomanda.Domain.mappers.Mapper;
-import com.example.gestionecomanda.Domain.services.OrdineService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,7 +29,7 @@ public class TestController {
     private TestService testService;
     private TestPort testport;
     private Mapper<OrdineEntity, OrdineDTO> ordineMapper;
-    private OrdineService ordineService;
+    private DataPort dataPort;
 
     @Value("${spring.kafka.consumer.gestioneCliente.topic}")
     private String topic_notifyOrderEvent;
@@ -38,11 +38,11 @@ public class TestController {
     private String topic_notifyPrepEvent;
 
     @Autowired
-    public TestController(TestService testService, TestPort testport, Mapper<OrdineEntity, OrdineDTO> ordineMapper, OrdineService ordineService) {
+    public TestController(TestService testService, TestPort testport, Mapper<OrdineEntity, OrdineDTO> ordineMapper, DataPort dataPort) {
         this.testService = testService;
         this.testport = testport;
         this.ordineMapper = ordineMapper;
-        this.ordineService = ordineService;
+        this.dataPort = dataPort;
     }
 
 
@@ -66,7 +66,7 @@ public class TestController {
     @PostMapping(path = "/test/sendorderevent")
     public ResponseEntity<OrdineDTO> sendMessageToTopicSendOrderEvent(@RequestBody OrdineDTO ordineDTO) throws JsonProcessingException {
         OrdineEntity ordineEntity = ordineMapper.mapFrom(ordineDTO);
-        OrdineEntity savedOrdineEntity = ordineService.save(ordineEntity);
+        OrdineEntity savedOrdineEntity = dataPort.save(ordineEntity);
         OrdineDTO savedOrdineDTO = ordineMapper.mapTo(savedOrdineEntity);
         testService.sendMessageToTopicSendOrderEvent(savedOrdineDTO);
         return new ResponseEntity<>(savedOrdineDTO, HttpStatus.CREATED);
