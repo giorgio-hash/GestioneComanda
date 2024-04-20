@@ -82,8 +82,8 @@ public class TestControllerTests {
                 MockMvcRequestBuilders.post("/test/sendorderevent")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(ordineJson)
-        ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.id").value(ordineDTO.getId())
+        /*).andExpect(
+                MockMvcResultMatchers.jsonPath("$.id").value(ordineDTO.getId())  l'id viene auto generato */
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$.idComanda").value(ordineDTO.getIdComanda())
         ).andExpect(

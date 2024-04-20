@@ -15,7 +15,7 @@ import java.sql.Timestamp;
 @Builder
 @Entity
 @jakarta.persistence.Table(name = "Ordine", schema = "serveeasy", catalog = "")
-@IdClass(com.example.gestionecomanda.Domain.Entity.OrdineEntityPK.class)
+//@IdClass(com.example.gestionecomanda.Domain.Entity.OrdineEntityPK.class)
 public class OrdineEntity {
     
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,8 +23,9 @@ public class OrdineEntity {
     @jakarta.persistence.Column(name = "ID", nullable = false)
     private int id;
 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
+    //@Id
+    @Basic
     @jakarta.persistence.Column(name = "ID_comanda", nullable = false)
     private int idComanda;
     
