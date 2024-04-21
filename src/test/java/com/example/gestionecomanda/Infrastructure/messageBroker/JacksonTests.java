@@ -4,10 +4,16 @@ import com.example.gestionecomanda.Domain.dto.OrdineDTO;
 import com.example.gestionecomanda.util.TestDataUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import lombok.extern.java.Log;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
 
+import java.text.SimpleDateFormat;
+
+import static com.example.gestionecomanda.util.TestUtil.formattedTimestamp;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -15,10 +21,17 @@ import static org.assertj.core.api.Assertions.assertThat;
  * con l'oggetto ObjectMapper
  */
 @JsonTest
+@Log
 public class JacksonTests {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @BeforeEach
+    public void setup(){
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS"));
+    }
 
     @Test
     public void testSerialization() throws JsonProcessingException {
@@ -28,7 +41,16 @@ public class JacksonTests {
         // Serializzazione
         String json = objectMapper.writeValueAsString(ordineDto);
 
-        assertThat(json).isEqualTo("{\"id\":"  + ordineDto.getId() + ",\"idComanda\":"+  ordineDto.getIdComanda() +"}");
+        log.info("from: " + ordineDto.toString());
+        log.info("to:" + json);
+
+        assertThat(json).isEqualTo("{\"id\":"  + ordineDto.getId()
+                + ",\"idComanda\":" +  ordineDto.getIdComanda()
+                + ",\"idPiatto\":" +  "\"" + ordineDto.getIdPiatto() + "\""
+                + ",\"stato\":" +  ordineDto.getStato()
+                + ",\"urgenzaCliente\":" +  ordineDto.getUrgenzaCliente()
+                + ",\"tordinazione\":" +  "\"" + formattedTimestamp(ordineDto.getTOrdinazione()) + "\""
+                +"}");
     }
 
     @Test
@@ -36,10 +58,19 @@ public class JacksonTests {
 
         OrdineDTO ordineDto = TestDataUtil.createOrdineDtoA();
 
-        String json = "{\"id\":"  + ordineDto.getId() + ",\"idComanda\":"+  ordineDto.getIdComanda() +"}";
+        String json = "{\"id\":"  + ordineDto.getId()
+                + ",\"idComanda\":" +  ordineDto.getIdComanda()
+                + ",\"idPiatto\":" +  "\"" + ordineDto.getIdPiatto() + "\""
+                + ",\"stato\":" +  ordineDto.getStato()
+                + ",\"urgenzaCliente\":" +  ordineDto.getUrgenzaCliente()
+                + ",\"tordinazione\":" +  "\"" + formattedTimestamp(ordineDto.getTOrdinazione()) + "\""
+                +"}";
 
         // Deserializzazione
         OrdineDTO ordineDTO = objectMapper.readValue(json,OrdineDTO.class);
+
+        log.info("from:" + json);
+        log.info("to: " + ordineDTO.toString());
 
         assertThat(ordineDTO).isEqualTo(ordineDto);
     }
