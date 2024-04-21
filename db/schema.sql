@@ -42,7 +42,6 @@ KEY `ID_ingr_princ` (`ID_ingr_princ`),
 CONSTRAINT `Piatto_ibfk_1` FOREIGN KEY (`ID_ingr_princ`) REFERENCES `IngredientePrincipale` (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
 CREATE TABLE `Ordine` (
   `ID` int(10) NOT NULL AUTO_INCREMENT,
   `ID_comanda` int(10) NOT NULL,
