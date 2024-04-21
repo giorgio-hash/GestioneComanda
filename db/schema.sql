@@ -49,7 +49,7 @@ CREATE TABLE `Ordine` (
   `stato` int(1) DEFAULT 0,
   `t_ordinazione` timestamp NULL DEFAULT current_timestamp(),
   `urgenza_cliente` int(2) DEFAULT 0,
-  PRIMARY KEY (`ID`,`ID_comanda`),
+  PRIMARY KEY (`ID`),
   KEY `ID_comanda` (`ID_comanda`),
   KEY `ID_piatto` (`ID_piatto`),
   CONSTRAINT `Ordine_ibfk_1` FOREIGN KEY (`ID_comanda`) REFERENCES `Comanda` (`ID`),
