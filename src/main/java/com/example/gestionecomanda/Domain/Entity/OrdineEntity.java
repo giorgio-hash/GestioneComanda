@@ -19,11 +19,10 @@ public class OrdineEntity {
     
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "ID", nullable = false)
+    @Column(name = "ID", nullable = false, insertable = false, updatable = false)
     private int id;
 
-    //@Basic
-    @Column(name = "ID_comanda", nullable = false)
+    @Column(name = "ID_COMANDA", nullable = false, updatable = false)
     private int idComanda;
     
     @Basic
@@ -31,15 +30,15 @@ public class OrdineEntity {
     private String idPiatto;
 
     @Basic
-    @Column(name = "stato", nullable = true)
+    @Column(name = "stato", insertable = false, updatable = true)
     private Integer stato;
     
     @Basic
-    @Column(name = "t_ordinazione", nullable = true)
+    @Column(name = "t_ordinazione", insertable = false, updatable = false)
     private Timestamp tOrdinazione;
 
     @Basic
-    @Column(name = "urgenza_cliente", nullable = true)
+    @Column(name = "urgenza_cliente", insertable = false, updatable = true)
     private Integer urgenzaCliente;
 
 }
