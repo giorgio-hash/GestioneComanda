@@ -42,6 +42,7 @@ KEY `ID_ingr_princ` (`ID_ingr_princ`),
 CONSTRAINT `Piatto_ibfk_1` FOREIGN KEY (`ID_ingr_princ`) REFERENCES `IngredientePrincipale` (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
 CREATE TABLE `Ordine` (
   `ID` int(10) NOT NULL AUTO_INCREMENT,
   `ID_comanda` int(10) NOT NULL,
@@ -49,7 +50,7 @@ CREATE TABLE `Ordine` (
   `stato` int(1) DEFAULT 0,
   `t_ordinazione` timestamp NULL DEFAULT current_timestamp(),
   `urgenza_cliente` int(2) DEFAULT 0,
-  PRIMARY KEY (`ID`,`ID_comanda`),
+  PRIMARY KEY (`ID`),
   KEY `ID_comanda` (`ID_comanda`),
   KEY `ID_piatto` (`ID_piatto`),
   CONSTRAINT `Ordine_ibfk_1` FOREIGN KEY (`ID_comanda`) REFERENCES `Comanda` (`ID`),

@@ -14,19 +14,16 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @Builder
 @Entity
-@jakarta.persistence.Table(name = "Ordine", schema = "serveeasy", catalog = "")
-//@IdClass(com.example.gestionecomanda.Domain.Entity.OrdineEntityPK.class)
+@Table(name = "Ordine", schema = "serveeasy", catalog = "")
 public class OrdineEntity {
     
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @jakarta.persistence.Column(name = "ID", nullable = false)
+    @Column(name = "ID", nullable = false)
     private int id;
 
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)
-    //@Id
-    @Basic
-    @jakarta.persistence.Column(name = "ID_comanda", nullable = false)
+    //@Basic
+    @Column(name = "ID_comanda", nullable = false)
     private int idComanda;
     
     @Basic
