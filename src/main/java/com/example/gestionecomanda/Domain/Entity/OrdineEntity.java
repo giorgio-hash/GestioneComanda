@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
 
@@ -34,6 +35,7 @@ public class OrdineEntity {
     private Integer stato;
     
     @Basic
+    @CreationTimestamp
     @Column(name = "t_ordinazione", updatable = false)
     private Timestamp tOrdinazione;
 

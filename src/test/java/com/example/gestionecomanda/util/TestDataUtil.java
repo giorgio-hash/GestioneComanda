@@ -8,26 +8,22 @@ import com.example.gestionecomanda.Domain.dto.OrdineDTO;
  */
 public class TestDataUtil {
 
-    // ATTENZIONE: Tenere idComanda uguale tra createOrdineEntityA e createOrdineEntityB e diverso da createOrdineEntityC!
+    // ATTENZIONE: non modificare i valori !
 
     public static OrdineEntity createOrdineEntityA(){
         return OrdineEntity.builder()
-                .id(22)
                 .idComanda(7)
                 .idPiatto("RIS188")
                 .stato(1)
-                .tOrdinazione(new java.sql.Timestamp(System.currentTimeMillis()))
                 .urgenzaCliente(0)
                 .build();
     }
 
     public static OrdineDTO createOrdineDtoA(){
         return OrdineDTO.builder()
-                .id(22)
                 .idComanda(7)
                 .idPiatto("RIS188")
                 .stato(1)
-                .tOrdinazione(new java.sql.Timestamp(System.currentTimeMillis()))
                 .urgenzaCliente(0)
                 .build();
     }
@@ -38,7 +34,6 @@ public class TestDataUtil {
                 .idComanda(7)
                 .idPiatto("SPA279")
                 .stato(1)
-                .tOrdinazione(new java.sql.Timestamp(System.currentTimeMillis()))
                 .urgenzaCliente(1)
                 .build();
     }
@@ -49,7 +44,6 @@ public class TestDataUtil {
                 .idComanda(7)
                 .idPiatto("SPA279")
                 .stato(1)
-                .tOrdinazione(new java.sql.Timestamp(System.currentTimeMillis()))
                 .urgenzaCliente(1)
                 .build();
     }

@@ -81,16 +81,12 @@ public class TestControllerTests {
                 MockMvcRequestBuilders.post("/test/order")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(ordineJson)
-        /*).andExpect(
-                MockMvcResultMatchers.jsonPath("$.id").value(ordineDTO.getId())  l'id viene auto generato */
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$.idComanda").value(ordineDTO.getIdComanda())
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$.idPiatto").value(ordineDTO.getIdPiatto())
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$.stato").value(ordineDTO.getStato())
-        ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.tordinazione").value(formattedTimestamp(ordineDTO.getTOrdinazione()))
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$.urgenzaCliente").value(ordineDTO.getUrgenzaCliente()));
     }
@@ -122,8 +118,6 @@ public class TestControllerTests {
                 MockMvcResultMatchers.jsonPath("$.idPiatto").value(ordineEntity.getIdPiatto())
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$.stato").value(ordineEntity.getStato())
-        ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.tordinazione").value(formattedTimestamp(ordineEntity.getTOrdinazione()))
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$.urgenzaCliente").value(ordineEntity.getUrgenzaCliente()));
     }
@@ -175,7 +169,7 @@ public class TestControllerTests {
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$.stato").value(1)
         ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.tordinazione").value(formattedTimestamp(ordineEntity.getTOrdinazione()))
+                MockMvcResultMatchers.jsonPath("$.tordinazione").value(formattedTimestamp(savedOrder.getTOrdinazione()))
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$.urgenzaCliente").value(2));
     }
@@ -213,27 +207,27 @@ public class TestControllerTests {
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$[0].id").value(savedOrderA.getId())
         ).andExpect(
-                MockMvcResultMatchers.jsonPath("$[0].idComanda").value(ordineEntityA.getIdComanda())
+                MockMvcResultMatchers.jsonPath("$[0].idComanda").value(savedOrderA.getIdComanda())
         ).andExpect(
-                MockMvcResultMatchers.jsonPath("$[0].idPiatto").value(ordineEntityA.getIdPiatto())
+                MockMvcResultMatchers.jsonPath("$[0].idPiatto").value(savedOrderA.getIdPiatto())
         ).andExpect(
-                MockMvcResultMatchers.jsonPath("$[0].stato").value(ordineEntityA.getStato())
+                MockMvcResultMatchers.jsonPath("$[0].stato").value(savedOrderA.getStato())
         ).andExpect(
-                MockMvcResultMatchers.jsonPath("$[0].tordinazione").value(formattedTimestamp(ordineEntityA.getTOrdinazione()))
+                MockMvcResultMatchers.jsonPath("$[0].tordinazione").value(formattedTimestamp(savedOrderA.getTOrdinazione()))
         ).andExpect(
-                MockMvcResultMatchers.jsonPath("$[0].urgenzaCliente").value(ordineEntityA.getUrgenzaCliente())
+                MockMvcResultMatchers.jsonPath("$[0].urgenzaCliente").value(savedOrderA.getUrgenzaCliente())
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$[1].id").value(savedOrderB.getId())
         ).andExpect(
-                MockMvcResultMatchers.jsonPath("$[1].idComanda").value(ordineEntityB.getIdComanda())
+                MockMvcResultMatchers.jsonPath("$[1].idComanda").value(savedOrderB.getIdComanda())
         ).andExpect(
-                MockMvcResultMatchers.jsonPath("$[1].idPiatto").value(ordineEntityB.getIdPiatto())
+                MockMvcResultMatchers.jsonPath("$[1].idPiatto").value(savedOrderB.getIdPiatto())
         ).andExpect(
-                MockMvcResultMatchers.jsonPath("$[1].stato").value(ordineEntityB.getStato())
+                MockMvcResultMatchers.jsonPath("$[1].stato").value(savedOrderB.getStato())
         ).andExpect(
-                MockMvcResultMatchers.jsonPath("$[1].tordinazione").value(formattedTimestamp(ordineEntityB.getTOrdinazione()))
+                MockMvcResultMatchers.jsonPath("$[1].tordinazione").value(formattedTimestamp(savedOrderB.getTOrdinazione()))
         ).andExpect(
-                MockMvcResultMatchers.jsonPath("$[1].urgenzaCliente").value(ordineEntityB.getUrgenzaCliente())
+                MockMvcResultMatchers.jsonPath("$[1].urgenzaCliente").value(savedOrderB.getUrgenzaCliente())
         );
     }
 
@@ -274,7 +268,7 @@ public class TestControllerTests {
 
     @Test
     public void testThatSendMessageToTopicSendOrderEventSuccessfullyReturnsOrdineDTO() throws Exception {
-        OrdineDTO ordineDTO = TestDataUtil.createOrdineDtoB();
+        OrdineDTO ordineDTO = TestDataUtil.createOrdineDtoC();
         String ordineJson = objectMapper.writeValueAsString(ordineDTO);
 
         mockMvc.perform(
@@ -289,8 +283,6 @@ public class TestControllerTests {
                 MockMvcResultMatchers.jsonPath("$.idPiatto").value(ordineDTO.getIdPiatto())
         ).andExpect(
                  MockMvcResultMatchers.jsonPath("$.stato").value(ordineDTO.getStato())
-        ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.tordinazione").value(formattedTimestamp(ordineDTO.getTOrdinazione()))
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$.urgenzaCliente").value(ordineDTO.getUrgenzaCliente()));
     }

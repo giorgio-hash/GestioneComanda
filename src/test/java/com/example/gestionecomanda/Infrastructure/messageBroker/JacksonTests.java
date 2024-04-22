@@ -36,7 +36,7 @@ public class JacksonTests {
     @Test
     public void testSerialization() throws JsonProcessingException {
 
-        OrdineDTO ordineDto = TestDataUtil.createOrdineDtoA();
+        OrdineDTO ordineDto = TestDataUtil.createOrdineDtoC();
 
         // Serializzazione
         String json = objectMapper.writeValueAsString(ordineDto);
@@ -56,7 +56,7 @@ public class JacksonTests {
     @Test
     public void testDeserialization() throws JsonProcessingException {
 
-        OrdineDTO ordineDto = TestDataUtil.createOrdineDtoA();
+        OrdineDTO ordineDto = TestDataUtil.createOrdineDtoC();
 
         String json = "{\"id\":"  + ordineDto.getId()
                 + ",\"idComanda\":" +  ordineDto.getIdComanda()

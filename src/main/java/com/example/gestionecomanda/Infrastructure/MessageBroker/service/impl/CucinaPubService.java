@@ -17,12 +17,6 @@ public class CucinaPubService implements CucinaPubAdapter {
         this.cucinaPubProducer = cucinaPubProducer;
     }
 
-    /**
-     * Tramite Kafka invia l'ordine nel topic del message broker correlato con la cucina
-     *
-     * @param ordineDTO DTO dell'entita' ordine da inviare
-     * @throws JsonProcessingException eccezione sollevata nella serializzazione
-     */
     @Override
     public void sendMessageToTopic(OrdineDTO ordineDTO) throws JsonProcessingException {
         cucinaPubProducer.send(ordineDTO);
