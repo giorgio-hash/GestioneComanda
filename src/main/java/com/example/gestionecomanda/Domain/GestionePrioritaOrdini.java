@@ -1,11 +1,13 @@
 package com.example.gestionecomanda.Domain;
 
 import com.example.gestionecomanda.Domain.Entity.ClienteEntity;
+import com.example.gestionecomanda.Domain.ports.DataPort;
+import com.example.gestionecomanda.Domain.ports.TestPort;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class GestionePrioritaOrdini implements TestPort{
+public class GestionePrioritaOrdini implements TestPort {
     private final DataPort dataPort;
 
     @Autowired

@@ -1,12 +1,14 @@
 package com.example.gestionecomanda.Infrastructure.Repository;
 
 import com.example.gestionecomanda.Domain.Entity.ClienteEntity;
-import com.example.gestionecomanda.Domain.DataPort;
+import com.example.gestionecomanda.Domain.ports.DataPort;
 import com.example.gestionecomanda.Domain.Entity.OrdineEntity;
 import com.example.gestionecomanda.Domain.Repository.ClienteRepository;
 import com.example.gestionecomanda.Domain.Repository.OrdineRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
 
 @Repository
 public class JPADBAdapter implements DataPort {
@@ -20,6 +22,18 @@ public class JPADBAdapter implements DataPort {
         this.ordineRepository = ordineRepository;
     }
 
+    /* ORDINE */
+
+    @Override
+    public OrdineEntity saveOrder(OrdineEntity ordineEntity) {
+        return ordineRepository.save(ordineEntity);
+    }
+
+    @Override
+    public Optional<OrdineEntity> findOrderById(int id) {
+        return ordineRepository.findById(id);
+    }
+
     @Override
     public void getOrderData() {
 
@@ -30,22 +44,11 @@ public class JPADBAdapter implements DataPort {
 
     }
 
+    /* CLIENTE */
+
     @Override
     public Iterable<ClienteEntity> getClienti() {
         return clrep.findAll();
     }
-
-    /**
-     * Salva l'entita' ordine all'interno del database
-     *
-     * @param ordineEntity entità ordine da salvare
-     * @return entita' ordine salvata
-     */
-    @Override
-    public OrdineEntity save(OrdineEntity ordineEntity) {
-        return ordineRepository.save(ordineEntity);
-    }
-
-    // TODO: Creare metodo per estrarre un ordine dal DB
 
 }
