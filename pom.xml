@@ -111,6 +111,13 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- H2 in memory -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
         <!-- actuator-->
         <dependency>
             <groupId>org.springframework.boot</groupId>

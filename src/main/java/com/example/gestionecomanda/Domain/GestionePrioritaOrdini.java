@@ -1,11 +1,11 @@
 package com.example.gestionecomanda.Domain;
 
-import com.example.gestionecomanda.Domain.Entity.ClienteEntity;
+import com.example.gestionecomanda.Domain.ports.DataPort;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class GestionePrioritaOrdini implements TestPort{
+public class GestionePrioritaOrdini {
     private final DataPort dataPort;
 
     @Autowired
@@ -13,8 +13,5 @@ public class GestionePrioritaOrdini implements TestPort{
         this.dataPort = dataPort;
     }
 
-    @Override
-    public Iterable<ClienteEntity> getClienti() {
-        return dataPort.getClienti();
-    }
+
 }
