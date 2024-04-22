@@ -1,12 +1,9 @@
 package com.example.gestionecomanda.Interface.testControllers.impl;
 
 import com.example.gestionecomanda.Domain.dto.OrdineDTO;
-import com.example.gestionecomanda.Infrastructure.MessageBroker.service.CucinaPubAdapter;
-import com.example.gestionecomanda.Infrastructure.MessageBroker.service.impl.CucinaPubService;
+import com.example.gestionecomanda.Domain.ports.MessagePort;
 import com.example.gestionecomanda.Interface.EventControllers.SubClienteAdapter.NotifyOrderEvent;
-import com.example.gestionecomanda.Interface.EventControllers.SubClienteAdapter.impl.SubClienteAdapter;
 import com.example.gestionecomanda.Interface.EventControllers.SubCucinaAdapter.NotifyPrepEvent;
-import com.example.gestionecomanda.Interface.EventControllers.SubCucinaAdapter.impl.SubCucinaAdapter;
 import com.example.gestionecomanda.Interface.testControllers.TestService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,7 +24,7 @@ public class TestServiceImpl implements TestService {
 
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final ObjectMapper objectMapper;
-    private final CucinaPubAdapter cucinaPubAdapter;
+    private final MessagePort<OrdineDTO> messagePort;
     private final NotifyOrderEvent notifyOrderEvent;
     private final NotifyPrepEvent notifyPrepEvent;
     private String lastMessageReceived;
@@ -35,12 +32,12 @@ public class TestServiceImpl implements TestService {
     @Autowired
     public TestServiceImpl(final KafkaTemplate<String, String> kafkaTemplate,
                            final ObjectMapper objectMapper,
-                           final CucinaPubAdapter cucinaPubAdapter,
+                           final MessagePort<OrdineDTO> messagePort,
                            final NotifyOrderEvent notifyOrderEvent,
                            final NotifyPrepEvent notifyPrepEvent){
         this.kafkaTemplate = kafkaTemplate;
         this.objectMapper = objectMapper;
-        this.cucinaPubAdapter = cucinaPubAdapter;
+        this.messagePort = messagePort;
         this.notifyOrderEvent = notifyOrderEvent;
         this.notifyPrepEvent = notifyPrepEvent;
     }
@@ -53,7 +50,7 @@ public class TestServiceImpl implements TestService {
      */
     @Override
     public void sendMessageToTopicSendOrderEvent(OrdineDTO ordineDTO) throws JsonProcessingException {
-        cucinaPubAdapter.sendMessageToTopic(ordineDTO);
+        messagePort.send(ordineDTO);
     }
 
     /**

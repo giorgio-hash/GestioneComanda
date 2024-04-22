@@ -15,7 +15,7 @@ import java.util.concurrent.CompletableFuture;
 
 @Service
 @Log
-public class CucinaPubProducer {
+public class CucinaPubProducer implements MessagePort<OrdineDTO> {
 
     private final KafkaTemplate<String, String> kafkaTemplate;
 
