@@ -30,15 +30,15 @@ public class OrdineEntity {
     private String idPiatto;
 
     @Basic
-    @Column(name = "stato"/*, insertable = false*/, updatable = true)
+    @Column(name = "stato", updatable = true)
     private Integer stato;
     
     @Basic
-    @Column(name = "t_ordinazione"/*, insertable = false*/, updatable = false)
+    @Column(name = "t_ordinazione", updatable = false)
     private Timestamp tOrdinazione;
 
     @Basic
-    @Column(name = "urgenza_cliente"/*, insertable = false*/, updatable = true)
+    @Column(name = "urgenza_cliente", updatable = true)
     private Integer urgenzaCliente;
 
 }

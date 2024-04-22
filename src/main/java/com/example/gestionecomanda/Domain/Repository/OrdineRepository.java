@@ -6,4 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface OrdineRepository extends CrudRepository<OrdineEntity, Integer> {
+
+    Iterable<OrdineEntity> findOrdineEntitiesByIdComanda(int idComanda);
+
 }

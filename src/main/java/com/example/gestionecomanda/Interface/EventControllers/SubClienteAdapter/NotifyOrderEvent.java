@@ -1,5 +1,7 @@
 package com.example.gestionecomanda.Interface.EventControllers.SubClienteAdapter;
 
+import org.springframework.kafka.annotation.KafkaListener;
+
 public interface NotifyOrderEvent {
 
     /**
