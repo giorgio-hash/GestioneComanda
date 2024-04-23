@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
 
@@ -14,18 +15,15 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @Builder
 @Entity
-@jakarta.persistence.Table(name = "Ordine", schema = "serveeasy", catalog = "")
-@IdClass(com.example.gestionecomanda.Domain.Entity.OrdineEntityPK.class)
+@Table(name = "Ordine", schema = "serveeasy", catalog = "")
 public class OrdineEntity {
     
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @jakarta.persistence.Column(name = "ID", nullable = false)
+    @Column(name = "ID", nullable = false, insertable = false, updatable = false)
     private int id;
 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id
-    @jakarta.persistence.Column(name = "ID_comanda", nullable = false)
+    @Column(name = "ID_COMANDA", nullable = false, updatable = false)
     private int idComanda;
     
     @Basic
@@ -33,15 +31,16 @@ public class OrdineEntity {
     private String idPiatto;
 
     @Basic
-    @Column(name = "stato", nullable = true)
+    @Column(name = "stato", updatable = true)
     private Integer stato;
     
     @Basic
-    @Column(name = "t_ordinazione", nullable = true)
+    @CreationTimestamp
+    @Column(name = "t_ordinazione", updatable = false)
     private Timestamp tOrdinazione;
 
     @Basic
-    @Column(name = "urgenza_cliente", nullable = true)
+    @Column(name = "urgenza_cliente", updatable = true)
     private Integer urgenzaCliente;
 
 }

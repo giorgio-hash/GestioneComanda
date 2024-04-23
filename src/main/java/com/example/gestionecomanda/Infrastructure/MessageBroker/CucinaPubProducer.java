@@ -1,6 +1,7 @@
 package com.example.gestionecomanda.Infrastructure.MessageBroker;
 
 import com.example.gestionecomanda.Domain.dto.OrdineDTO;
+import com.example.gestionecomanda.Domain.ports.MessagePort;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.java.Log;
@@ -14,7 +15,7 @@ import java.util.concurrent.CompletableFuture;
 
 @Service
 @Log
-public class CucinaPubProducer {
+public class CucinaPubProducer implements MessagePort<OrdineDTO> {
 
     private final KafkaTemplate<String, String> kafkaTemplate;
 

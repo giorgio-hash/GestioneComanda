@@ -1,9 +1,8 @@
 package com.example.gestionecomanda.Interface.testControllers;
 
-import com.example.gestionecomanda.Domain.DataPort;
-import com.example.gestionecomanda.Domain.Entity.ClienteEntity;
+import com.example.gestionecomanda.Domain.ports.DataPort;
 import com.example.gestionecomanda.Domain.Entity.OrdineEntity;
-import com.example.gestionecomanda.Domain.TestPort;
+import com.example.gestionecomanda.Domain.ports.TestPort;
 import com.example.gestionecomanda.Domain.dto.OrdineDTO;
 import com.example.gestionecomanda.Domain.mappers.Mapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -11,23 +10,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-
-/* TODO: mentre le chiamate GET e POST sul topic SendOrderEvent utilizzano già un oggetto ordine,
- *       gli altri due topic utilizzano ancora una stringa --> sostituire la stringa con un oggetto adeguato
+/**
+ * Implementazione del REST Controller seguendo lo stile Interface Driven Controller
  */
-
 @RestController
-public class TestController {
+public class TestController implements TestPort{
 
     private TestService testService;
-    private TestPort testport;
     private Mapper<OrdineEntity, OrdineDTO> ordineMapper;
     private DataPort dataPort;
 
@@ -38,48 +35,69 @@ public class TestController {
     private String topic_notifyPrepEvent;
 
     @Autowired
-    public TestController(TestService testService, TestPort testport, Mapper<OrdineEntity, OrdineDTO> ordineMapper, DataPort dataPort) {
+    public TestController(TestService testService, Mapper<OrdineEntity, OrdineDTO> ordineMapper, DataPort dataPort) {
         this.testService = testService;
-        this.testport = testport;
         this.ordineMapper = ordineMapper;
         this.dataPort = dataPort;
     }
 
-
-    /**
-     * Espone una API di GET con la quale è possibile richiedere al database tutti i clienti
-     * @return una lista di oggetti Cliente serializzati
-     */
-    @GetMapping(path = "/test/clienti")
-    public Iterable<ClienteEntity> getClienti(){
-        return testport.getClienti();
+    @Override
+    public ResponseEntity<OrdineDTO> addOrdine(OrdineDTO ordineDTO) {
+        OrdineEntity ordineEntity = ordineMapper.mapFrom(ordineDTO);
+        OrdineEntity savedOrdineEntity = dataPort.saveOrder(ordineEntity);
+        OrdineDTO savedOrdineDTO = ordineMapper.mapTo(savedOrdineEntity);
+        return new ResponseEntity<>(savedOrdineDTO, HttpStatus.CREATED);
     }
 
-    /**
-     * Espone una API di POST con la quale è possibile iniettare all'interno del broker oggetti al fine di test
-     * Si testa il topic sendOrderEvent da gestione comanda verso gestione cucina
-     *
-     * @param ordineDTO contenuto dell'oggetto da iniettare
-     * @return entità risposta che contiene l'oggetto creato e una risposta HTTP associata
-     * @throws JsonProcessingException eccezione sollevata dalla serializzazione
-     */
-    @PostMapping(path = "/test/sendorderevent")
-    public ResponseEntity<OrdineDTO> sendMessageToTopicSendOrderEvent(@RequestBody OrdineDTO ordineDTO) throws JsonProcessingException {
+    @Override
+    public ResponseEntity<OrdineDTO> getOrdine(int id) {
+        Optional<OrdineEntity> ordineEntity = dataPort.getOrderById(id);
+        if(ordineEntity.isPresent()){
+            OrdineDTO ordineDTO = ordineMapper.mapTo(ordineEntity.get());
+            return new ResponseEntity<>(ordineDTO, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @Override
+    public ResponseEntity<OrdineDTO> partialUpdateOrdine(@PathVariable int id, @RequestBody OrdineDTO ordineDTO) {
+        if(!dataPort.isOrderExist(id))
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
         OrdineEntity ordineEntity = ordineMapper.mapFrom(ordineDTO);
-        OrdineEntity savedOrdineEntity = dataPort.save(ordineEntity);
+        OrdineEntity updatedEntity = dataPort.updateOrder(id, ordineEntity);
+
+        return new ResponseEntity<>(ordineMapper.mapTo(updatedEntity),HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<List<OrdineDTO>> getAllOrdersByIdComanda(int idComanda) {
+        List<OrdineEntity> ordini = dataPort.findAllOrdersByIdComanda(idComanda);
+        if(!ordini.isEmpty())
+            return new ResponseEntity<>(ordini.stream()
+                    .map(ordineMapper::mapTo)
+                    .collect(Collectors.toList()),HttpStatus.OK);
+        else
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @Override
+    public ResponseEntity deleteOrder(@PathVariable("id") int id) {
+        dataPort.deleteOrder(id);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
+
+    @Override
+    public ResponseEntity<OrdineDTO> sendOrderEvent(@RequestBody OrdineDTO ordineDTO) throws JsonProcessingException {
+        OrdineEntity ordineEntity = ordineMapper.mapFrom(ordineDTO);
+        OrdineEntity savedOrdineEntity = dataPort.saveOrder(ordineEntity);
         OrdineDTO savedOrdineDTO = ordineMapper.mapTo(savedOrdineEntity);
         testService.sendMessageToTopicSendOrderEvent(savedOrdineDTO);
         return new ResponseEntity<>(savedOrdineDTO, HttpStatus.CREATED);
     }
 
-    /**
-     * Espone una API di GET con la quale è possibile ottenere l'ultimo messaggio letto sul topic SendOrderEvent
-     * Si testa il topic notifyPrepEvent da gestione cucina verso gestione comanda
-     *
-     * @return entità risposta che contiene l'oggetto creato e una risposta HTTP associata
-     */
-    @GetMapping(path = "/test/sendorderevent")
-    public ResponseEntity<String> peekMessageFromTopicSendOrderEvent() {
+    @Override
+    public ResponseEntity<String> getMessageFromTopicSendOrderEvent() {
         Optional<String> message = testService.peekFromSendOrderEvent();
         if(message.isPresent())
             return new ResponseEntity<>(message.get(), HttpStatus.OK);
@@ -87,28 +105,14 @@ public class TestController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    /**
-     * Espone una API di POST con la quale è possibile iniettare all'interno del broker oggetti al fine di test
-     * Si testa il topic notifyOrderEvent da gestione cliente verso gestione comanda
-     *
-     * @param message contenuto dell'oggetto da iniettare
-     * @return entità risposta che contiene l'oggetto creato e una risposta HTTP associata
-     * @throws JsonProcessingException eccezione sollevata dalla serializzazione
-     */
-    @PostMapping(path = "/test/notifyorderevent")
-    public ResponseEntity<String> sendMessageToTopicNotifyOrderEvent(@RequestBody String message) throws JsonProcessingException {
+    @Override
+    public ResponseEntity<String> sendNotifyOrderEvent(@RequestBody String message) throws JsonProcessingException {
         testService.sendMessageToTopic(message, topic_notifyOrderEvent);
         return new ResponseEntity<>(message, HttpStatus.CREATED);
     }
 
-    /**
-     * Espone una API di GET con la quale è possibile ottenere l'ultimo messaggio letto sul topic NotifyOrderEvent
-     * Si testa il topic notifyPrepEvent da gestione cucina verso gestione comanda
-     *
-     * @return entità risposta che contiene l'oggetto creato e una risposta HTTP associata
-     */
-    @GetMapping(path = "/test/notifyorderevent")
-    public ResponseEntity<String> peekMessageFromTopicNotifyOrderEvent() {
+    @Override
+    public ResponseEntity<String> getMessageFromTopicNotifyOrderEvent() {
         Optional<String> message = testService.peekFromNotifyOrderEvent();
         if(message.isPresent())
             return new ResponseEntity<>(message.get(), HttpStatus.OK);
@@ -116,34 +120,25 @@ public class TestController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    /**
-     * Espone una API di POST con la quale è possibile iniettare all'interno del broker oggetti al fine di test
-     * Si testa il topic notifyPrepEvent da gestione cucina verso gestione comanda
-     *
-     * @param message contenuto dell'oggetto da iniettare
-     * @return entità risposta che contiene l'oggetto creato e una risposta HTTP associata
-     * @throws JsonProcessingException eccezione sollevata dalla serializzazione
-     */
-    @PostMapping(path = "/test/notifyprepevent")
-    public ResponseEntity<String> sendMessageToTopicNotifyPrepEvent(@RequestBody String message) throws JsonProcessingException {
+    @Override
+    public ResponseEntity<String> sendNotifyPrepEvent(@RequestBody String message) throws JsonProcessingException {
         testService.sendMessageToTopic(message, topic_notifyPrepEvent);
         return new ResponseEntity<>(message, HttpStatus.CREATED);
     }
 
-    /**
-     * Espone una API di GET con la quale è possibile ottenere l'ultimo messaggio letto sul topic NotifyPrepEvent
-     * Si testa il topic notifyPrepEvent da gestione cucina verso gestione comanda
-     *
-     * @return entità risposta che contiene l'oggetto creato e una risposta HTTP associata
-     */
-    @GetMapping(path = "/test/notifyprepevent")
-    public ResponseEntity<String> peekMessageFromTopicNotifyPrepEvent() {
+    @Override
+    public ResponseEntity<String> getMessageFromTopicNotifyPrepEvent() {
         Optional<String> message = testService.peekFromNotifyPrepEvent();
         if(message.isPresent())
             return new ResponseEntity<>(message.get(), HttpStatus.OK);
         else
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-
+    /*
+    @Override
+    public Iterable<ClienteEntity> getClienti(){
+        return null;
+    }
+    */
 
 }
