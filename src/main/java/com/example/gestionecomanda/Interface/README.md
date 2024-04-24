@@ -38,7 +38,6 @@ Content-Length: 90
 ```http request
 GET /test/order/1 HTTP/1.1
 Host: localhost:8080
-}
 ```
 ```http request
 PATCH /test/order/1 HTTP/1.1
@@ -84,22 +83,28 @@ Host: localhost:8080
 POST /test/notifyorderevent HTTP/1.1
 Host: localhost:8080
 Content-Type: application/json
-Content-Length: 30
+Content-Length: 39
 
-"messaggio inviato da postman"
+{
+    "id" : 2,
+    "idComanda": 7
+}
 ``` 
 ```http request
 GET /test/notifyorderevent HTTP/1.1
 Host: localhost:8080
 ``` 
-### Topic notifypPepEvent
+### Topic notifyPrepEvent
 ```http request
 POST /test/notifyprepevent HTTP/1.1
 Host: localhost:8080
 Content-Type: application/json
-Content-Length: 30
+Content-Length: 39
 
-"messaggio inviato da postman"
+{
+    "id" : 1,
+    "idComanda": 4
+}
 ``` 
 ```http request
 GET /test/notifyprepevent HTTP/1.1

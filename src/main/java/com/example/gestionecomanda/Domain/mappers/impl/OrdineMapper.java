@@ -6,6 +6,9 @@ import com.example.gestionecomanda.Domain.mappers.Mapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
+/**
+ * Implementazione del Mapper tra Entita' a DTO e viceversa
+ */
 @Component
 public class OrdineMapper implements Mapper<OrdineEntity, OrdineDTO> {
 

@@ -1,14 +1,11 @@
 package com.example.gestionecomanda.Domain.ports;
 
-import com.example.gestionecomanda.Domain.Entity.ClienteEntity;
 import com.example.gestionecomanda.Domain.Entity.OrdineEntity;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface DataPort {
-
-    Iterable<ClienteEntity> getClienti();
 
     /**
      * Controlla se l'ordine esiste nel database

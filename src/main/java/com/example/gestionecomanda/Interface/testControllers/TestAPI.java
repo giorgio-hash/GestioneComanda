@@ -1,5 +1,7 @@
-package com.example.gestionecomanda.Domain.ports;
+package com.example.gestionecomanda.Interface.testControllers;
 
+import com.example.gestionecomanda.Domain.dto.NotificaOrdineDTO;
+import com.example.gestionecomanda.Domain.dto.NotificaPrepOrdineDTO;
 import com.example.gestionecomanda.Domain.dto.OrdineDTO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.http.ResponseEntity;
@@ -7,8 +9,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/* TODO: mentre le chiamate GET e POST sul topic SendOrderEvent utilizzano un oggetto ordine da sostiure con OrderEvent,
- *       gli altri due topic utilizzano una stringa --> sostituire la stringa con un oggetto notifica
+/* TODO: le chiamate GET e POST sul topic SendOrderEvent
+    utilizzano un oggetto OrderEntityDTO da sostiure con OrderEvent (oppure OrderPQ),
  */
 
 /**
@@ -16,7 +18,7 @@ import java.util.List;
  * che permette di interagire direttamente con alcuni componenti del sistema tramite apposite API
  */
 @RequestMapping("/test")
-public interface TestPort {
+public interface TestAPI {
 
     /**
      * Salva nel database l'oggetto ordine dato un ordineDTO
@@ -88,12 +90,12 @@ public interface TestPort {
      * Espone una API di POST con la quale è possibile iniettare all'interno del broker oggetti al fine di test
      * Si testa il topic notifyOrderEvent da gestione cliente verso gestione comanda
      *
-     * @param message contenuto dell'oggetto da iniettare
+     * @param notificaOrdineDTO contenuto dell'oggetto da iniettare
      * @return entità risposta che contiene l'oggetto creato e una risposta HTTP associata
      * @throws JsonProcessingException eccezione sollevata dalla serializzazione
      */
     @PostMapping(path = "/notifyorderevent")
-    ResponseEntity<String> sendNotifyOrderEvent(@RequestBody String message) throws JsonProcessingException;
+    ResponseEntity<NotificaOrdineDTO> sendNotifyOrderEvent(@RequestBody NotificaOrdineDTO notificaOrdineDTO) throws JsonProcessingException;
 
     /**
      * Espone una API di GET con la quale è possibile ottenere l'ultimo messaggio letto sul topic NotifyOrderEvent
@@ -102,18 +104,18 @@ public interface TestPort {
      * @return entità risposta che contiene l'oggetto richiesto e una risposta HTTP associata
      */
     @GetMapping(path = "/notifyorderevent")
-    ResponseEntity<String> getMessageFromTopicNotifyOrderEvent();
+    ResponseEntity<NotificaOrdineDTO> getMessageFromTopicNotifyOrderEvent();
 
     /**
      * Espone una API di POST con la quale è possibile iniettare all'interno del broker oggetti al fine di test
      * Si testa il topic notifyPrepEvent da gestione cucina verso gestione comanda
      *
-     * @param message contenuto dell'oggetto da iniettare
+     * @param notificaPrepOrdineDTO contenuto dell'oggetto da iniettare
      * @return entità risposta che contiene l'oggetto creato e una risposta HTTP associata
      * @throws JsonProcessingException eccezione sollevata dalla serializzazione
      */
     @PostMapping(path = "/notifyprepevent")
-    ResponseEntity<String> sendNotifyPrepEvent(@RequestBody String message) throws JsonProcessingException;
+    ResponseEntity<NotificaPrepOrdineDTO> sendNotifyPrepEvent(@RequestBody NotificaPrepOrdineDTO notificaPrepOrdineDTO) throws JsonProcessingException;
 
     /**
      * Espone una API di GET con la quale è possibile ottenere l'ultimo messaggio letto sul topic NotifyPrepEvent
@@ -122,15 +124,6 @@ public interface TestPort {
      * @return entità risposta che contiene l'oggetto richiesto e una risposta HTTP associata
      */
     @GetMapping(path = "/notifyprepevent")
-    ResponseEntity<String> getMessageFromTopicNotifyPrepEvent();
+    ResponseEntity<NotificaPrepOrdineDTO> getMessageFromTopicNotifyPrepEvent();
 
-
-    /**
-     * Espone una API di GET con la quale è possibile richiedere al database tutti i clienti
-     * @return una lista di oggetti Cliente serializzati
-     */
-    /*
-    @GetMapping(path = "/clienti")
-    Iterable<ClienteEntity> getClienti();
-    */
 }

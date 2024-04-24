@@ -1,4 +1,29 @@
+server:
+  address: localhost
+  port: 8080
+
 spring:
+  application:
+    name: GestioneComanda
+  datasource:
+    url: jdbc:mariadb://127.0.0.1:3306/serveeasy
+    driver-class-name: org.mariadb.jdbc.Driver
+    username: user
+    password: user
+    hikari:
+      allow-pool-suspension: true #setting specifico per evitare eccezioni dal database esterno dovute al crac e lifecycle
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MariaDBDialect
+        temp:
+          use_jdbc_metadata_defaults: false
+    hibernate:
+      ddl-auto: none #update
+    show-sql: true
+  sql:
+    init:
+      mode: never
   kafka:
     bootstrap-servers: localhost:9092
     producer:
