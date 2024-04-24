@@ -1,10 +1,13 @@
 package com.example.gestionecomanda.Interface.EventControlles.testControllers;
 
 import com.example.gestionecomanda.Domain.Entity.OrdineEntity;
+import com.example.gestionecomanda.Domain.dto.NotificaOrdineDTO;
+import com.example.gestionecomanda.Domain.dto.NotificaPrepOrdineDTO;
 import com.example.gestionecomanda.Domain.dto.OrdineDTO;
 import com.example.gestionecomanda.Domain.ports.DataPort;
 import com.example.gestionecomanda.Interface.testControllers.TestService;
 import com.example.gestionecomanda.util.TestDataUtil;
+import com.example.gestionecomanda.util.TestUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +16,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.kafka.annotation.EnableKafka;
+import org.springframework.kafka.test.EmbeddedKafkaBroker;
 import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
@@ -20,6 +24,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static com.example.gestionecomanda.util.TestUtil.formattedTimestamp;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 /**
  * Test di Integrazione della classe TestControllers usando MockMVC
@@ -45,10 +50,14 @@ public class TestControllerTests {
     private TestService testService;
     @Autowired
     private DataPort dataPort;
+    @Autowired
+    private EmbeddedKafkaBroker embeddedKafka;
     @Value("${spring.kafka.consumer.gestioneCliente.topic}")
     private String topic_notifyOrderEvent;
     @Value("${spring.kafka.consumer.gestioneCucina.topic}")
     private String topic_notifyPrepEvent;
+    @Value("${spring.kafka.producer.topic}")
+    private String topic_sendOrderEvent;
 
 
     /* TEST URL:            */
@@ -286,7 +295,9 @@ public class TestControllerTests {
     @Test
     public void testThatPeekMessageFromTopicSendOrderEventReturnsHttpStatus200WhenOrderExist() throws Exception {
         OrdineDTO ordineDTO = TestDataUtil.createOrdineDtoB();
-        testService.sendMessageToTopicSendOrderEvent(ordineDTO);
+        String ordineDto = TestUtil.serialize(ordineDTO);
+        TestUtil.sendMessageToTopic(topic_sendOrderEvent,ordineDto,embeddedKafka);
+
         Thread.sleep(5000);
 
         mockMvc.perform(
@@ -298,7 +309,9 @@ public class TestControllerTests {
     @Test
     public void testThatPeekMessageFromTopicSendOrderEventReturnsOrderWhenOrderExist() throws Exception {
         OrdineDTO ordineDTO = TestDataUtil.createOrdineDtoC();
-        testService.sendMessageToTopicSendOrderEvent(ordineDTO);
+        String ordineDto = TestUtil.serialize(ordineDTO);
+
+        TestUtil.sendMessageToTopic(topic_sendOrderEvent,ordineDto,embeddedKafka);
         Thread.sleep(5000);
 
         mockMvc.perform(
@@ -322,13 +335,13 @@ public class TestControllerTests {
 
     @Test
     public void testThatSendMessageToTopicNotifyOrderEventSuccessfullyReturnsHttp201Created() throws Exception {
-        String notifica = "notifica di test";
-        String ordineJson = objectMapper.writeValueAsString(notifica);
+        NotificaOrdineDTO notificaOrdineDTO = TestDataUtil.createNotificaOrdineDTOA();
+        String notifica = TestUtil.serialize(notificaOrdineDTO);
 
         mockMvc.perform(
                 MockMvcRequestBuilders.post("/test/notifyorderevent")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(ordineJson)
+                        .content(notifica)
         ).andExpect(
                 MockMvcResultMatchers.status().isCreated()
         );
@@ -336,8 +349,9 @@ public class TestControllerTests {
 
     @Test
     public void testThatPeekMessageFromTopicNotifyOrderEventReturnsHttpStatus200WhenOrderExist() throws Exception {
-        String notifica = "notifica di test";
-        testService.sendMessageToTopic(notifica, topic_notifyOrderEvent);
+        NotificaOrdineDTO notificaOrdineDTO = TestDataUtil.createNotificaOrdineDTOA();
+        String notifica = TestUtil.serialize(notificaOrdineDTO);
+        TestUtil.sendMessageToTopic(topic_notifyOrderEvent,notifica,embeddedKafka);
 
         Thread.sleep(5000);
 
@@ -349,28 +363,31 @@ public class TestControllerTests {
 
     @Test
     public void testThatPeekMessageFromTopicNotifyOrderEventReturnsOrderWhenOrderExist() throws Exception {
-        String notifica = "notifica di test";
-        testService.sendMessageToTopic(notifica, topic_notifyOrderEvent);
+        NotificaOrdineDTO notificaOrdineDTO = TestDataUtil.createNotificaOrdineDTOA();
+        String notifica = TestUtil.serialize(notificaOrdineDTO);
+        TestUtil.sendMessageToTopic(topic_notifyOrderEvent,notifica,embeddedKafka);
         Thread.sleep(5000);
 
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/test/notifyorderevent")
                         .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(
-                MockMvcResultMatchers.content().string("\"" + notifica + "\""));
+                MockMvcResultMatchers.jsonPath("$.id").value(notificaOrdineDTO.getId())
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.idComanda").value(notificaOrdineDTO.getIdComanda()));
     }
 
     /* /test/notifyprepevent */
 
     @Test
     public void testThatSendMessageToTopicNotifyPrepEventSuccessfullyReturnsHttp201Created() throws Exception {
-        String notifica = "notifica di test";
-        String ordineJson = objectMapper.writeValueAsString(notifica);
+        NotificaPrepOrdineDTO notificaPrepOrdineDTO = TestDataUtil.createotificaPrepOrdineDTOA();
+        String notifica = TestUtil.serialize(notificaPrepOrdineDTO);
 
         mockMvc.perform(
                 MockMvcRequestBuilders.post("/test/notifyprepevent")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(ordineJson)
+                        .content(notifica)
         ).andExpect(
                 MockMvcResultMatchers.status().isCreated()
         );
@@ -378,8 +395,10 @@ public class TestControllerTests {
 
     @Test
     public void testThatPeekMessageFromTopicNotifyPrepEventReturnsHttpStatus200WhenOrderExist() throws Exception {
-        String notifica = "notifica di test";
-        testService.sendMessageToTopic(notifica, topic_notifyPrepEvent);
+        NotificaPrepOrdineDTO notificaPrepOrdineDTO = TestDataUtil.createotificaPrepOrdineDTOA();
+        String notifica = TestUtil.serialize(notificaPrepOrdineDTO);
+        TestUtil.sendMessageToTopic(topic_notifyPrepEvent,notifica,embeddedKafka);
+
         Thread.sleep(5000);
 
         mockMvc.perform(
@@ -390,17 +409,17 @@ public class TestControllerTests {
 
     @Test
     public void testThatPeekMessageFromTopicNotifyPrepEventReturnsOrderWhenOrderExist() throws Exception {
-        String notifica = "notifica di test";
-        testService.sendMessageToTopic(notifica, topic_notifyPrepEvent);
+        NotificaPrepOrdineDTO notificaPrepOrdineDTO = TestDataUtil.createotificaPrepOrdineDTOA();
+        String notifica = TestUtil.serialize(notificaPrepOrdineDTO);
+        TestUtil.sendMessageToTopic(topic_notifyPrepEvent,notifica,embeddedKafka);
+
         Thread.sleep(5000);
 
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/test/notifyprepevent")
                         .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(
-                MockMvcResultMatchers.content().string("\"" + notifica + "\""));
+                MockMvcResultMatchers.content().string(notifica));
     }
-
-
 
 }

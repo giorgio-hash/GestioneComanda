@@ -7,6 +7,9 @@ import org.springframework.context.annotation.Configuration;
 
 import java.text.SimpleDateFormat;
 
+/**
+ * Classe configurazione di ObjectMapper utile per la serializzazione e deserializzazione di messaggi JSON
+ */
 @Configuration
 public class JsonConfig {
 

@@ -13,6 +13,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.concurrent.CompletableFuture;
 
+// TODO: Usare un OrderEvent al posto di OrdineDTO !
+
+/**
+ * Classe che implementa la MessagePort e permette di scrivere un messaggio sul topic specificato del Message Broker
+ */
 @Service
 @Log
 public class CucinaPubProducer implements MessagePort<OrdineDTO> {
@@ -33,12 +38,6 @@ public class CucinaPubProducer implements MessagePort<OrdineDTO> {
         this.objectMapper = objectMapper;
     }
 
-    /**
-     * serializza e invia l'oggetto ordine passato come parametro nel topic verso la cucina
-     *
-     * @param ordineDTO DTO dell'entita' ordine da inviare
-     * @throws JsonProcessingException eccezione sollevata nella serializzazione
-     */
     public void send(OrdineDTO ordineDTO) throws JsonProcessingException {
 
         // Serializza in un oggetto JSON

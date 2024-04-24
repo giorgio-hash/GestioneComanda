@@ -1,8 +1,9 @@
 package com.example.gestionecomanda.Interface.testControllers;
 
+import com.example.gestionecomanda.Domain.dto.NotificaOrdineDTO;
+import com.example.gestionecomanda.Domain.dto.NotificaPrepOrdineDTO;
 import com.example.gestionecomanda.Domain.ports.DataPort;
 import com.example.gestionecomanda.Domain.Entity.OrdineEntity;
-import com.example.gestionecomanda.Domain.ports.TestPort;
 import com.example.gestionecomanda.Domain.dto.OrdineDTO;
 import com.example.gestionecomanda.Domain.mappers.Mapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -22,7 +23,7 @@ import java.util.stream.Collectors;
  * Implementazione del REST Controller seguendo lo stile Interface Driven Controller
  */
 @RestController
-public class TestController implements TestPort{
+public class TestController implements TestAPI {
 
     private TestService testService;
     private Mapper<OrdineEntity, OrdineDTO> ordineMapper;
@@ -106,14 +107,15 @@ public class TestController implements TestPort{
     }
 
     @Override
-    public ResponseEntity<String> sendNotifyOrderEvent(@RequestBody String message) throws JsonProcessingException {
+    public ResponseEntity<NotificaOrdineDTO> sendNotifyOrderEvent(@RequestBody NotificaOrdineDTO notificaOrdineDTO) throws JsonProcessingException {
+        String message = testService.serializeObject(notificaOrdineDTO);
         testService.sendMessageToTopic(message, topic_notifyOrderEvent);
-        return new ResponseEntity<>(message, HttpStatus.CREATED);
+        return new ResponseEntity<>(notificaOrdineDTO, HttpStatus.CREATED);
     }
 
     @Override
-    public ResponseEntity<String> getMessageFromTopicNotifyOrderEvent() {
-        Optional<String> message = testService.peekFromNotifyOrderEvent();
+    public ResponseEntity<NotificaOrdineDTO> getMessageFromTopicNotifyOrderEvent() {
+        Optional<NotificaOrdineDTO> message = testService.peekFromNotifyOrderEvent();
         if(message.isPresent())
             return new ResponseEntity<>(message.get(), HttpStatus.OK);
         else
@@ -121,24 +123,20 @@ public class TestController implements TestPort{
     }
 
     @Override
-    public ResponseEntity<String> sendNotifyPrepEvent(@RequestBody String message) throws JsonProcessingException {
+    public ResponseEntity<NotificaPrepOrdineDTO> sendNotifyPrepEvent(@RequestBody NotificaPrepOrdineDTO notificaPrepOrdineDTO) throws JsonProcessingException {
+        String message = testService.serializeObject(notificaPrepOrdineDTO);
         testService.sendMessageToTopic(message, topic_notifyPrepEvent);
-        return new ResponseEntity<>(message, HttpStatus.CREATED);
+        return new ResponseEntity<>(notificaPrepOrdineDTO, HttpStatus.CREATED);
     }
 
     @Override
-    public ResponseEntity<String> getMessageFromTopicNotifyPrepEvent() {
-        Optional<String> message = testService.peekFromNotifyPrepEvent();
+    public ResponseEntity<NotificaPrepOrdineDTO> getMessageFromTopicNotifyPrepEvent() {
+        Optional<NotificaPrepOrdineDTO> message = testService.peekFromNotifyPrepEvent();
         if(message.isPresent())
             return new ResponseEntity<>(message.get(), HttpStatus.OK);
         else
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-    /*
-    @Override
-    public Iterable<ClienteEntity> getClienti(){
-        return null;
-    }
-    */
+
 
 }

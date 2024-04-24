@@ -1,9 +1,7 @@
 package com.example.gestionecomanda.Infrastructure.Repository;
 
-import com.example.gestionecomanda.Domain.Entity.ClienteEntity;
 import com.example.gestionecomanda.Domain.ports.DataPort;
 import com.example.gestionecomanda.Domain.Entity.OrdineEntity;
-import com.example.gestionecomanda.Domain.Repository.ClienteRepository;
 import com.example.gestionecomanda.Domain.Repository.OrdineRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -13,15 +11,16 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+/**
+ * Classe adatatore della porta DataPort con la quale si effettuano operazioni sul database utilizzando JPA
+ */
 @Repository
 public class JPADBAdapter implements DataPort {
 
-    private final ClienteRepository clrep;
     private final OrdineRepository ordineRepository;
 
     @Autowired
-    public JPADBAdapter(ClienteRepository clrep, OrdineRepository ordineRepository) {
-        this.clrep = clrep;
+    public JPADBAdapter(OrdineRepository ordineRepository) {
         this.ordineRepository = ordineRepository;
     }
 
@@ -66,13 +65,5 @@ public class JPADBAdapter implements DataPort {
     public void deleteOrder(int id) {
         ordineRepository.deleteById(id);
     }
-
-    /* CLIENTE */
-
-    @Override
-    public Iterable<ClienteEntity> getClienti() {
-        return clrep.findAll();
-    }
-
 
 }

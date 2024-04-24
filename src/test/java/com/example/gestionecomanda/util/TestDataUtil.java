@@ -1,6 +1,8 @@
 package com.example.gestionecomanda.util;
 
 import com.example.gestionecomanda.Domain.Entity.OrdineEntity;
+import com.example.gestionecomanda.Domain.dto.NotificaOrdineDTO;
+import com.example.gestionecomanda.Domain.dto.NotificaPrepOrdineDTO;
 import com.example.gestionecomanda.Domain.dto.OrdineDTO;
 
 /**
@@ -67,6 +69,34 @@ public class TestDataUtil {
                 .stato(0)
                 .tOrdinazione(new java.sql.Timestamp(System.currentTimeMillis()))
                 .urgenzaCliente(0)
+                .build();
+    }
+
+    public static NotificaOrdineDTO createNotificaOrdineDTOA(){
+        return NotificaOrdineDTO.builder()
+                .id(1)
+                .idComanda(7)
+                .build();
+    }
+
+    public static NotificaOrdineDTO createNotificaOrdineDTOB(){
+        return NotificaOrdineDTO.builder()
+                .id(2)
+                .idComanda(4)
+                .build();
+    }
+
+    public static NotificaPrepOrdineDTO createotificaPrepOrdineDTOA(){
+        return NotificaPrepOrdineDTO.builder()
+                .id(1)
+                .idComanda(7)
+                .build();
+    }
+
+    public static NotificaPrepOrdineDTO createotificaPrepOrdineDTOB(){
+        return NotificaPrepOrdineDTO.builder()
+                .id(2)
+                .idComanda(4)
                 .build();
     }
 

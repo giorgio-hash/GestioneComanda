@@ -1,5 +1,7 @@
 package com.example.gestionecomanda.Interface.testControllers.impl;
 
+import com.example.gestionecomanda.Domain.dto.NotificaOrdineDTO;
+import com.example.gestionecomanda.Domain.dto.NotificaPrepOrdineDTO;
 import com.example.gestionecomanda.Domain.dto.OrdineDTO;
 import com.example.gestionecomanda.Domain.ports.MessagePort;
 import com.example.gestionecomanda.Interface.EventControllers.SubClienteAdapter.NotifyOrderEvent;
@@ -18,6 +20,9 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * Classe a supporto di TestController che fornisce metodi comuni e utili
+ */
 @Service
 @Log
 public class TestServiceImpl implements TestService {
@@ -42,6 +47,11 @@ public class TestServiceImpl implements TestService {
         this.notifyPrepEvent = notifyPrepEvent;
     }
 
+    @Override
+    public String serializeObject(Object object) throws JsonProcessingException {
+        return objectMapper.writeValueAsString(object);
+    }
+
     /**
      * Invia sul topic SendOrderEvent un oggetto ordineDTO tramite message broker
      *
@@ -56,14 +66,12 @@ public class TestServiceImpl implements TestService {
     /**
      * Invia sul topic specificato un oggetto tramite message broker
      *
-     * @param message oggetto da inviare
+     * @param payload oggetto serializzato da inviare
      * @param topic topic su quale inviare il messaggio
      * @throws JsonProcessingException
      */
     @Override
-    public void sendMessageToTopic(String message, String topic) throws JsonProcessingException {
-
-        final String payload = objectMapper.writeValueAsString(message);
+    public void sendMessageToTopic(String payload, String topic) {
 
         CompletableFuture<SendResult<String, String>> future = kafkaTemplate.send(topic, payload);
         future.whenComplete((result,ex)->{
@@ -102,7 +110,7 @@ public class TestServiceImpl implements TestService {
      * @return l'ultimo messaggio letto dal consumer se non è null, altrimenti un optional il cui valore è null
      */
     @Override
-    public Optional<String> peekFromNotifyOrderEvent(){
+    public Optional<NotificaOrdineDTO> peekFromNotifyOrderEvent(){
         return Optional.ofNullable(notifyOrderEvent.getLastMessageReceived());
     }
 
@@ -112,7 +120,7 @@ public class TestServiceImpl implements TestService {
      * @return l'ultimo messaggio letto dal consumer se non è null, altrimenti un optional il cui valore è null
      */
     @Override
-    public Optional<String> peekFromNotifyPrepEvent(){
+    public Optional<NotificaPrepOrdineDTO> peekFromNotifyPrepEvent(){
         return Optional.ofNullable(notifyPrepEvent.getLastMessageReceived());
     }
 
