@@ -44,7 +44,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @EmbeddedKafka(partitions = 1,
         controlledShutdown = false,
-        brokerProperties = { "listeners=PLAINTEXT://localhost:9092", "port=29092" },
+        brokerProperties = { "listeners=PLAINTEXT://localhost:9092", "port=9092" },
         topics = {"${spring.kafka.producer.topic}"})
 class CucinaPubProducerTests {
 

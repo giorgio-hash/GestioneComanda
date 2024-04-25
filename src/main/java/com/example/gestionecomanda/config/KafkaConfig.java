@@ -23,17 +23,18 @@ public class KafkaConfig {
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
 
-    @Value("${spring.kafka.producer.topic}")
-    private String topic;
-
-    @Bean
-    public NewTopic topic() {
-        return TopicBuilder.name(topic)
-                .partitions(1)
-                .replicas(1)
-                .build();
-    }
-
+    /*
+        @Value("${spring.kafka.producer.topic}")
+        private Stringopic;
+    /*
+        @Bean
+        public NewTopic topic() {
+            return TopicBuilder.name(topic)
+                    .partitions(1)
+                    .replicas(1)
+                    .build();
+        }
+    */
     @Bean
     public ProducerFactory<String, String> producerFactory() {
         Map<String, Object> configProps = new HashMap<>();
