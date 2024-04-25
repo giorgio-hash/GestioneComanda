@@ -9,4 +9,5 @@ public interface CucinaPort {
      * @param notificaPrepOrdineDTO oggetto notifica dell'invio di una notifica da parte di Gestione Cucina
      */
     void setPreparationStatus(NotificaPrepOrdineDTO notificaPrepOrdineDTO);
+
 }
