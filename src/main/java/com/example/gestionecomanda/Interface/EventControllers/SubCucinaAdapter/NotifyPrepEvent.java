@@ -1,5 +1,9 @@
 package com.example.gestionecomanda.Interface.EventControllers.SubCucinaAdapter;
 
+import com.example.gestionecomanda.Domain.dto.NotificaPrepOrdineDTO;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import org.springframework.kafka.annotation.KafkaListener;
+
 public interface NotifyPrepEvent {
 
     /**
@@ -11,13 +15,14 @@ public interface NotifyPrepEvent {
      * @param partition numero di partizione sul quale si riceve il messaggio
      * @param offset numero di offset che presenta il messaggio ricevuto
      */
-    void receive(String message, String topic, Integer partition, Long offset);
+    @KafkaListener(id = "${spring.kafka.consumer.gestioneCucina.group-id}", topics = "${spring.kafka.consumer.gestioneCucina.topic}")
+    void receive(String message, String topic, Integer partition, Long offset) throws JsonProcessingException;
 
     /**
      * Restituisce l'ultimo messaggio letto dal listener
      *
      * @return l'ultimo messaggio letto dal listener
      */
-    String getLastMessageReceived();
+    NotificaPrepOrdineDTO getLastMessageReceived();
 
 }

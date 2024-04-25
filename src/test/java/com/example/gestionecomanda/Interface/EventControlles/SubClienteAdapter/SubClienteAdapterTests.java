@@ -1,9 +1,12 @@
 package com.example.gestionecomanda.Interface.EventControlles.SubClienteAdapter;
 
 import ch.qos.logback.classic.Logger;
+import com.example.gestionecomanda.Domain.dto.NotificaOrdineDTO;
 import com.example.gestionecomanda.Interface.EventControllers.SubClienteAdapter.impl.SubClienteAdapter;
 import com.example.gestionecomanda.Interface.EventControllers.SubCucinaAdapter.impl.SubCucinaAdapter;
 import com.example.gestionecomanda.util.TestAppender;
+import com.example.gestionecomanda.util.TestDataUtil;
+import com.example.gestionecomanda.util.TestUtil;
 import lombok.extern.java.Log;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
@@ -13,15 +16,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.kafka.annotation.EnableKafka;
-import org.springframework.kafka.core.DefaultKafkaProducerFactory;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.kafka.test.EmbeddedKafkaBroker;
 import org.springframework.kafka.test.context.EmbeddedKafka;
-import org.springframework.kafka.test.utils.KafkaTestUtils;
 import org.springframework.test.annotation.DirtiesContext;
 
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
@@ -69,17 +68,13 @@ public class SubClienteAdapterTests {
 
     @Test
     @Order(1)
-    public void testLogOutput1() throws InterruptedException {
+    public void testOutput1() throws Exception {
 
-        String data = "\"test message\"";
+        NotificaOrdineDTO notificaOrdineDTO = TestDataUtil.createNotificaOrdineDTOA();
+        String notifica = TestUtil.serialize(notificaOrdineDTO);
 
-        Map<String, Object> producerProps = KafkaTestUtils.producerProps(embeddedKafka);
-        DefaultKafkaProducerFactory<Integer, String> pf = new DefaultKafkaProducerFactory<>(producerProps);
-        KafkaTemplate<Integer, String> template = new KafkaTemplate<>(pf, true);
-        template.setDefaultTopic(topic);
-
-        CompletableFuture<SendResult<Integer, String>> future = template.send(topic,data);
-        log.info("Sent Message=[" + data + "] with offset=[0]");
+        CompletableFuture<SendResult<Integer, String>> future = TestUtil.sendMessageToTopic(topic,notifica,embeddedKafka);
+        log.info("Sent Message=[" + notifica + "] with offset=[0]");
 
         boolean messageConsumed = subClienteAdapter.getLatch().await(10, TimeUnit.SECONDS);
 
@@ -91,24 +86,22 @@ public class SubClienteAdapterTests {
         // testo la corretta ricezione
         assertTrue(messageConsumed);
         assertFalse(testAppender.events.isEmpty());
-        assertEquals("Received a message \"test message\", from " + topic + " topic, 0 partition, and 0 offset", testAppender.events.get(0).getFormattedMessage());
+        assertEquals("Received a message " + notifica + ", from " + topic + " topic, 0 partition, and 0 offset", testAppender.events.get(0).getFormattedMessage());
 
+        NotificaOrdineDTO notificaOrdineDTOReceived = subClienteAdapter.getLastMessageReceived();
+        assertEquals(notificaOrdineDTO, notificaOrdineDTOReceived);
         logger.detachAppender(testAppender);
     }
 
     @Test
     @Order(2)
-    public void testLogOutput2() throws InterruptedException {
+    public void testOutput2() throws Exception {
 
-        String data = "\"test message 2\"";
+        NotificaOrdineDTO notificaOrdineDTO = TestDataUtil.createNotificaOrdineDTOB();
+        String notifica = TestUtil.serialize(notificaOrdineDTO);
 
-        Map<String, Object> producerProps = KafkaTestUtils.producerProps(embeddedKafka);
-        DefaultKafkaProducerFactory<Integer, String> pf = new DefaultKafkaProducerFactory<>(producerProps);
-        KafkaTemplate<Integer, String> template = new KafkaTemplate<>(pf, true);
-        template.setDefaultTopic(topic);
-
-        CompletableFuture<SendResult<Integer, String>> future = template.send(topic,data);
-        log.info("Sent Message=[" + data + "] with offset=[1]");
+        CompletableFuture<SendResult<Integer, String>> future = TestUtil.sendMessageToTopic(topic,notifica,embeddedKafka);
+        log.info("Sent Message=[" + notifica + "] with offset=[1]");
 
         boolean messageConsumed = subClienteAdapter.getLatch().await(10, TimeUnit.SECONDS);
 
@@ -120,7 +113,10 @@ public class SubClienteAdapterTests {
         // testo la corretta ricezione
         assertTrue(messageConsumed);
         assertFalse(testAppender.events.isEmpty());
-        assertEquals("Received a message \"test message 2\", from " + topic + " topic, 0 partition, and 1 offset", testAppender.events.get(0).getFormattedMessage());
+        assertEquals("Received a message " + notifica + ", from " + topic + " topic, 0 partition, and 1 offset", testAppender.events.get(0).getFormattedMessage());
+
+        NotificaOrdineDTO notificaOrdineDTOReceived = subClienteAdapter.getLastMessageReceived();
+        assertEquals(notificaOrdineDTO, notificaOrdineDTOReceived);
 
         logger.detachAppender(testAppender);
     }
