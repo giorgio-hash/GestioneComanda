@@ -24,13 +24,17 @@ public class GestioneHeap implements CucinaPort, AlgIF {
     private String topic_notifyPrepEvent;
     private final OrdineMapper ordineMapper;
     private final MessagePort<OrdineDTO> messagePort;
-    private final Queue<OrdineEntity> queue;
+
+    //TODO
+    //per entrare nella PriorityQueue,
+    // la classe che andremo ad utilizzare come oggetto ordine avrà bisogno di implementare Comparable!
+    //private final Queue<OrdineEntity> queue;
+    private OrdineEntity o;
 
     @Autowired
     public GestioneHeap(OrdineMapper ordineMapper, MessagePort<OrdineDTO> messagePort) {
         this.ordineMapper = ordineMapper;
         this.messagePort = messagePort;
-        this.queue = new PriorityQueue<>();
     }
 
     @Override
@@ -54,7 +58,7 @@ public class GestioneHeap implements CucinaPort, AlgIF {
 
     @Override
     public void pushNewOrder(OrdineEntity ordineEntity) {
-        queue.add(ordineEntity);
+        o = ordineEntity;
         try {
             popTopOrder();
         } catch (JsonProcessingException e) {
@@ -64,9 +68,10 @@ public class GestioneHeap implements CucinaPort, AlgIF {
 
     private void popTopOrder() throws JsonProcessingException {
 
-        OrdineEntity top_order = queue.poll();
-        if(top_order != null) sendOrdineToCucina(ordineMapper.mapTo(top_order));
-        else log.info("priorityQueue vuota");
+        if(o != null) sendOrdineToCucina(ordineMapper.mapTo(o));
+        else log.info("Qualcosa è andato storto: nessun ordine da mandare in cucina!");
+
+        o = null;
     }
 
     private void sendOrdineToCucina(OrdineDTO ordineDTO) throws JsonProcessingException {
