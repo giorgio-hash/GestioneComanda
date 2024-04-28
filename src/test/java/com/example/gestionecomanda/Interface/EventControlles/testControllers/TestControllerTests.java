@@ -377,7 +377,7 @@ public class TestControllerTests {
 
     @Test
     public void testThatSendMessageToTopicNotifyPrepEventSuccessfullyReturnsHttp201Created() throws Exception {
-        NotificaPrepOrdineDTO notificaPrepOrdineDTO = TestDataUtil.createotificaPrepOrdineDTOA();
+        NotificaPrepOrdineDTO notificaPrepOrdineDTO = TestDataUtil.createNotificaPrepOrdineDTOA();
         String notifica = TestUtil.serialize(notificaPrepOrdineDTO);
 
         mockMvc.perform(
@@ -391,7 +391,11 @@ public class TestControllerTests {
 
     @Test
     public void testThatPeekMessageFromTopicNotifyPrepEventReturnsHttpStatus200WhenOrderExist() throws Exception {
-        NotificaPrepOrdineDTO notificaPrepOrdineDTO = TestDataUtil.createotificaPrepOrdineDTOA();
+        OrdineEntity existing = TestDataUtil.createOrdineEntityA();
+        existing.setId(1);
+        dataPort.saveOrder(existing);//dato su cui viene eseguito l'update
+
+        NotificaPrepOrdineDTO notificaPrepOrdineDTO = TestDataUtil.createNotificaPrepOrdineDTOA();
         String notifica = TestUtil.serialize(notificaPrepOrdineDTO);
         TestUtil.sendMessageToTopic(topic_notifyPrepEvent,notifica,embeddedKafka);
 
@@ -405,7 +409,12 @@ public class TestControllerTests {
 
     @Test
     public void testThatPeekMessageFromTopicNotifyPrepEventReturnsOrderWhenOrderExist() throws Exception {
-        NotificaPrepOrdineDTO notificaPrepOrdineDTO = TestDataUtil.createotificaPrepOrdineDTOA();
+
+        OrdineEntity existing = TestDataUtil.createOrdineEntityA();
+        existing.setId(1);
+        dataPort.saveOrder(existing);//dato su cui viene eseguito l'update
+
+        NotificaPrepOrdineDTO notificaPrepOrdineDTO = TestDataUtil.createNotificaPrepOrdineDTOA();
         String notifica = TestUtil.serialize(notificaPrepOrdineDTO);
         TestUtil.sendMessageToTopic(topic_notifyPrepEvent,notifica,embeddedKafka);
 
