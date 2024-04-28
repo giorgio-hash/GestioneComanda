@@ -29,11 +29,11 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 @EnableKafka
 @SpringBootTest()
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@DirtiesContext
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @EmbeddedKafka(partitions = 1,
         controlledShutdown = false,
-        brokerProperties = { "listeners=PLAINTEXT://localhost:9092", "port=29092" },
+        brokerProperties = { "listeners=PLAINTEXT://localhost:9092", "port=9092" },
         topics = {"${spring.kafka.producer.topic}"})
 class MessagePortTests {
 

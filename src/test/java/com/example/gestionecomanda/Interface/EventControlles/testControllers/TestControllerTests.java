@@ -5,7 +5,6 @@ import com.example.gestionecomanda.Domain.dto.NotificaOrdineDTO;
 import com.example.gestionecomanda.Domain.dto.NotificaPrepOrdineDTO;
 import com.example.gestionecomanda.Domain.dto.OrdineDTO;
 import com.example.gestionecomanda.Domain.ports.DataPort;
-import com.example.gestionecomanda.Interface.testControllers.TestService;
 import com.example.gestionecomanda.util.TestDataUtil;
 import com.example.gestionecomanda.util.TestUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -45,8 +44,6 @@ public class TestControllerTests {
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
-    @Autowired
-    private TestService testService;
     @Autowired
     private DataPort dataPort;
     @Autowired
