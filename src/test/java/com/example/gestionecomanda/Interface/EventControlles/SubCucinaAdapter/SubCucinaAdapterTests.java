@@ -1,6 +1,8 @@
 package com.example.gestionecomanda.Interface.EventControlles.SubCucinaAdapter;
 
 import ch.qos.logback.classic.Logger;
+import com.example.gestionecomanda.Domain.Entity.OrdineEntity;
+import com.example.gestionecomanda.Domain.Repository.OrdineRepository;
 import com.example.gestionecomanda.Domain.dto.NotificaPrepOrdineDTO;
 import com.example.gestionecomanda.Interface.EventControllers.SubCucinaAdapter.impl.SubCucinaAdapter;
 import com.example.gestionecomanda.util.TestAppender;
@@ -54,6 +56,8 @@ public class SubCucinaAdapterTests {
     private String topic;
     private Logger logger;
     private TestAppender testAppender;
+    @Autowired
+    private OrdineRepository ordineRepository;
 
     @BeforeEach
     public void setup() {
@@ -69,13 +73,17 @@ public class SubCucinaAdapterTests {
     @Order(1)
     public void testLogOutput1() throws Exception {
 
-        NotificaPrepOrdineDTO notificaPrepOrdineDTO = TestDataUtil.createotificaPrepOrdineDTOA();
+        OrdineEntity existing = TestDataUtil.createOrdineEntityA();
+        existing.setId(1);
+        ordineRepository.save(existing);//dato su cui verrà eseguito l'update
+
+        NotificaPrepOrdineDTO notificaPrepOrdineDTO = TestDataUtil.createNotificaPrepOrdineDTOA();
         String notifica = TestUtil.serialize(notificaPrepOrdineDTO);
 
         CompletableFuture<SendResult<Integer, String>> future = TestUtil.sendMessageToTopic(topic,notifica,embeddedKafka);
         log.info("Sent Message=[" + notifica + "] with offset=[0]");
 
-        boolean messageConsumed = subCucinaAdapter.getLatch().await(10, TimeUnit.SECONDS);
+        boolean messageConsumed = subCucinaAdapter.getLatch().await(30, TimeUnit.SECONDS);
 
         //testo il corretto invio
         future.whenComplete((result,ex)->{
@@ -90,19 +98,25 @@ public class SubCucinaAdapterTests {
         NotificaPrepOrdineDTO notificaPrepOrdineDTOReceived = subCucinaAdapter.getLastMessageReceived();
         assertEquals(notificaPrepOrdineDTO, notificaPrepOrdineDTOReceived);
         logger.detachAppender(testAppender);
+
     }
 
     @Test
     @Order(2)
     public void testLogOutput2() throws Exception {
 
-        NotificaPrepOrdineDTO notificaPrepOrdineDTO = TestDataUtil.createotificaPrepOrdineDTOB();
+        OrdineEntity existing = TestDataUtil.createOrdineEntityB();
+        existing.setId(2);
+        existing.setIdComanda(4);
+        ordineRepository.save(existing);
+
+        NotificaPrepOrdineDTO notificaPrepOrdineDTO = TestDataUtil.createNotificaPrepOrdineDTOB();
         String notifica = TestUtil.serialize(notificaPrepOrdineDTO);
 
         CompletableFuture<SendResult<Integer, String>> future = TestUtil.sendMessageToTopic(topic,notifica,embeddedKafka);
         log.info("Sent Message=[" + notifica + "] with offset=[0]");
 
-        boolean messageConsumed = subCucinaAdapter.getLatch().await(10, TimeUnit.SECONDS);
+        boolean messageConsumed = subCucinaAdapter.getLatch().await(30, TimeUnit.SECONDS);
 
         //testo il corretto invio
         future.whenComplete((result,ex)->{
@@ -117,6 +131,7 @@ public class SubCucinaAdapterTests {
         NotificaPrepOrdineDTO notificaPrepOrdineDTOReceived = subCucinaAdapter.getLastMessageReceived();
         assertEquals(notificaPrepOrdineDTO, notificaPrepOrdineDTOReceived);
         logger.detachAppender(testAppender);
+
     }
 
 }

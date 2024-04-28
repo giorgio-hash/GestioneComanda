@@ -86,14 +86,14 @@ public class TestDataUtil {
                 .build();
     }
 
-    public static NotificaPrepOrdineDTO createotificaPrepOrdineDTOA(){
+    public static NotificaPrepOrdineDTO createNotificaPrepOrdineDTOA(){
         return NotificaPrepOrdineDTO.builder()
                 .id(1)
                 .idComanda(7)
                 .build();
     }
 
-    public static NotificaPrepOrdineDTO createotificaPrepOrdineDTOB(){
+    public static NotificaPrepOrdineDTO createNotificaPrepOrdineDTOB(){
         return NotificaPrepOrdineDTO.builder()
                 .id(2)
                 .idComanda(4)

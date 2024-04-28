@@ -1,20 +1,17 @@
 package com.example.gestionecomanda.Domain;
 
 import com.example.gestionecomanda.Domain.Entity.OrdineEntity;
-import com.example.gestionecomanda.Domain.dto.NotificaOrdineDTO;
 import com.example.gestionecomanda.Domain.dto.NotificaPrepOrdineDTO;
 import com.example.gestionecomanda.Domain.dto.OrdineDTO;
 import com.example.gestionecomanda.Domain.mappers.impl.OrdineMapper;
 import com.example.gestionecomanda.Domain.ports.CucinaPort;
+import com.example.gestionecomanda.Domain.ports.DataPort;
 import com.example.gestionecomanda.Domain.ports.MessagePort;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-import java.util.PriorityQueue;
-import java.util.Queue;
 
 @Service
 @Log
@@ -24,6 +21,7 @@ public class GestioneHeap implements CucinaPort, AlgIF {
     private String topic_notifyPrepEvent;
     private final OrdineMapper ordineMapper;
     private final MessagePort<OrdineDTO> messagePort;
+    private final DataPort dataPort;
 
     //TODO
     //per entrare nella PriorityQueue,
@@ -32,9 +30,10 @@ public class GestioneHeap implements CucinaPort, AlgIF {
     private OrdineEntity o;
 
     @Autowired
-    public GestioneHeap(OrdineMapper ordineMapper, MessagePort<OrdineDTO> messagePort) {
+    public GestioneHeap(OrdineMapper ordineMapper, MessagePort<OrdineDTO> messagePort, DataPort dataPort) {
         this.ordineMapper = ordineMapper;
         this.messagePort = messagePort;
+        this.dataPort = dataPort;
     }
 
     @Override
@@ -45,15 +44,8 @@ public class GestioneHeap implements CucinaPort, AlgIF {
                 + ", IdComanda: "
                 + notificaPrepOrdineDTO.getIdComanda() + "}");
 
-        //TODO
-        //setOrderStatus(notificaPrepOrdineDTO);
-    }
-
-    //TODO
-    @Override
-    public void setOrderStatus(NotificaOrdineDTO notificaOrdineDTO) {
-
-
+        OrdineEntity updated = dataPort.updateOrder(notificaPrepOrdineDTO.getId(),OrdineEntity.builder().stato(1).build());
+        log.info("Updated: " + updated);
     }
 
     @Override
