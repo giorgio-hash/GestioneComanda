@@ -23,4 +23,13 @@ public class NotificaPrepOrdineDTO {
      */
     private int idComanda;
 
+    /**
+     * Stato dell'ordine
+     * 0: Ordine preso in carico
+     * 1: Ordine in coda di preparazione
+     * 2: Ordine in preparazione
+     * 3: Ordine preparato
+     */
+    private int stato;
+
 }

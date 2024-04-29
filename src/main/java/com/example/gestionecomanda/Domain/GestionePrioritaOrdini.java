@@ -30,7 +30,7 @@ public class GestionePrioritaOrdini implements ClientePort {
         log.info("Received a notify from "
                 + topic_notifyPrepEvent
                 + " : { id: " + notificaOrdineDTO.getId()
-                + ", IdComanda: "
+                + ", idComanda: "
                 + notificaOrdineDTO.getIdComanda() + "}");
 
         extractOrderAndSendToHeap(notificaOrdineDTO);

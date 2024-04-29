@@ -42,9 +42,15 @@ public class GestioneHeap implements CucinaPort, AlgIF {
                 + topic_notifyPrepEvent
                 + " : { id: " + notificaPrepOrdineDTO.getId()
                 + ", IdComanda: "
-                + notificaPrepOrdineDTO.getIdComanda() + "}");
+                + notificaPrepOrdineDTO.getIdComanda()
+                + ", stato: "
+                + notificaPrepOrdineDTO.getStato() + "}");
 
-        OrdineEntity updated = dataPort.updateOrder(notificaPrepOrdineDTO.getId(),OrdineEntity.builder().stato(1).build());
+        OrdineEntity to_update = OrdineEntity.builder()
+                .stato(notificaPrepOrdineDTO.getStato())
+                .build();
+
+        OrdineEntity updated = dataPort.updateOrder(notificaPrepOrdineDTO.getId(),to_update);
         log.info("Updated: " + updated);
     }
 
