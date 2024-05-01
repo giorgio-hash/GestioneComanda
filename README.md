@@ -36,18 +36,25 @@ Apri Docker Desktop, apri un terminale e vai alla root directory del progetto e 
 ```shell
 docker compose up
 ```
-Manda in run il microservizio usando qualsiasi IDE oppure tramite Maven con la seguente istruzione:
+Manda in run il microservizio usando qualsiasi IDE oppure tramite Maven Wrapper con la seguente istruzione:
 ```shell
-mvn clean install
-mvn spring-boot:run
+./mvnw clean install
+./mvnw spring-boot:run
 ```
 
-## Kafka Web UI
+## User Interface
+
+### Kafdrop
 [Kafdrop](https://github.com/obsidiandynamics/kafdrop) è un'interfaccia utente Web per visualizzare i topic di Kafka
 e sfogliare i gruppi dei consumers.
 Lo strumento visualizza informazioni circa: brokers, topics, partitions, consumers, e consente di visualizzare i messaggi.
 
 Apri un browser e vai all'indirizzo http://localhost:9000.
+
+### phpMyAdmin
+[phpMyAdmin](https://www.phpmyadmin.net/) è un'applicazione web che consente di amministrare un database MariaDB tramite un qualsiasi browser.
+
+Apri un browser e vai all'indirizzo http://localhost:3307.
 
 ## Test
 Il microservizio GestioneComanda è sprovvisto di un componente HTTP Controller nella sua Interfaccia (che contiene solo EventController), viene quindi creato un controller di TEST per interagire direttamente con i componenti del servizio ai soli fini di test.
@@ -55,30 +62,35 @@ E' quindi possibile usufruire di varie API di test per gestire gli ordini oppure
 il topic del broker o per fare il percorso opposto e leggere gli ultimi messaggi del topic.
 via [Postman](https://web.postman.co//) tramite l'API all'indirizzo http://localhost:8080/...
 
-- ### API di Test
-    Documentazione completa API : https://documenter.getpostman.com/view/32004409/2sA3JDhkaG
+### API di Test
+Documentazione completa API : https://documenter.getpostman.com/view/32004409/2sA3JDhkaG
 
-- ### Test dei topic Kafka:
-    - ### Command Line Producer
-        Utilizzare il seguente comando per pubblicare sul topic specificato un messaggio
-        ```shell
-        docker exec --interactive --tty broker kafka-console-producer --bootstrap-server broker:9092 --topic "sendOrderEvent"
-        ```
-        ```shell
-        docker exec --interactive --tty broker kafka-console-producer --bootstrap-server broker:9092 --topic "notifyPrepEvent"
-        ```
-        ```shell
-        docker exec --interactive --tty broker kafka-console-producer --bootstrap-server broker:9092 --topic "notifyOrderEvent"
-        ```
-    
-    - ### Command Line Consumer
-        Utilizzare il seguente comando per restare in ascolto sul topic specifico
-        ```shell
-        docker exec --interactive --tty broker kafka-console-consumer --bootstrap-server broker:9092 --topic "sendOrderEvent" --from-beginning
-        ```
-        ```shell
-        docker exec --interactive --tty broker kafka-console-consumer --bootstrap-server broker:9092 --topic "notifyPrepEvent" --from-beginning
-        ```
-        ```shell
-        docker exec --interactive --tty broker kafka-console-consumer --bootstrap-server broker:9092 --topic "notifyOrderEvent" --from-beginning
-        ```
+### Test dei topic Kafka:
+- ### Command Line Producer
+    Utilizzare il seguente comando per pubblicare sul topic specificato un messaggio
+    ```shell
+    docker exec --interactive --tty broker kafka-console-producer --bootstrap-server broker:9092 --topic "sendOrderEvent"
+    ```
+    ```shell
+    docker exec --interactive --tty broker kafka-console-producer --bootstrap-server broker:9092 --topic "notifyPrepEvent"
+    ```
+    ```shell
+    docker exec --interactive --tty broker kafka-console-producer --bootstrap-server broker:9092 --topic "notifyOrderEvent"
+    ```
+
+- ### Command Line Consumer
+    Utilizzare il seguente comando per restare in ascolto sul topic specifico
+    ```shell
+    docker exec --interactive --tty broker kafka-console-consumer --bootstrap-server broker:9092 --topic "sendOrderEvent" --from-beginning
+    ```
+    ```shell
+    docker exec --interactive --tty broker kafka-console-consumer --bootstrap-server broker:9092 --topic "notifyPrepEvent" --from-beginning
+    ```
+    ```shell
+    docker exec --interactive --tty broker kafka-console-consumer --bootstrap-server broker:9092 --topic "notifyOrderEvent" --from-beginning
+    ```
+### Test di integrazione e unità
+E' possibile eseguire i test di integrazione e di unità tramite il Maven Wrapper, che è uno strumento che consente di eseguire i comandi Maven senza dover avere Maven installato globalmente sul sistema, tramite l'istruzione:
+```shell
+ ./mvnw clean verify
+ ```
