@@ -20,7 +20,7 @@ Il microservizio è stato implementato seguendo lo stile architetturale esagonal
 per questo motivo viene strutturato in 3 parti:
 
 - ### Interface
-    Adattatopri ponte tra il mondo esterno e il core del sistema, consentono al microservizio di comunicare con altre applicazioni, servizi o dispositivi esterni in modo         indipendente dall'implementazione interna del sistema stesso. Sono presenti i seguenti Interface Adapter:
+    Adattatori ponte tra il mondo esterno e il core del sistema, consentono al microservizio di comunicare con altre applicazioni, servizi o dispositivi esterni in modo         indipendente dall'implementazione interna del sistema stesso. Sono presenti i seguenti Interface Adapter:
     - EventControllers: SubCucina e SubCliente, permettono la ricezione di messaggi tramite message broker dagli altri microservizi.
 
 - ### Domain
@@ -60,7 +60,7 @@ Apri un browser e vai all'indirizzo http://localhost:3307.
 Il microservizio GestioneComanda è sprovvisto di un componente HTTP Controller nella sua Interfaccia (che contiene solo EventController), viene quindi creato un controller di TEST per interagire direttamente con i componenti del servizio ai soli fini di test.
 E' quindi possibile usufruire di varie API di test per gestire gli ordini oppure per iniettare dell'esterno messaggi verso
 il topic del broker o per fare il percorso opposto e leggere gli ultimi messaggi del topic.
-via [Postman](https://web.postman.co//) tramite l'API all'indirizzo http://localhost:8080/...
+via [Postman](https://web.postman.co//) tramite l'API all'indirizzo http://localhost:8080/. (vedi [documentazione completa API]( https://documenter.getpostman.com/view/32004409/2sA3JDhkaG))
 
 ### API di Test
 Documentazione completa API : https://documenter.getpostman.com/view/32004409/2sA3JDhkaG
