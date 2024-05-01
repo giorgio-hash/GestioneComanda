@@ -1,3 +1,51 @@
+# Gestione Comanda
+Il microservizio Gestione Comanda si occupa di implementare i seguenti casi d'uso del gruppo sistema:
+
+UC-1 “Gestione Comanda”, dettagliato:
+- UC-1.1 : gestione priorità ordine, ogni ordine è caratterizzato da una priorità
+- UC-1.2 : gestione coda ordini, ogni ordine è inserito in una coda ordini
+- UC-1.3 : assegnazione ordini comanda, ogni ordine deve essere associato ad una comanda
+- UC-1.4 : assegnazione comanda cliente, ogni comanda deve essere associata ad un cliente
+
+Nello specifico quindi GestioneComanda risolve gli use case del gruppo “sistema”, rappresenta il cuore del sistema ed incorpora la logica di backend fondamentale per la gestione regolarizzata degli ordini da cliente a cucina, attraverso politiche di schedulazione a priorità progettate ed implementate con un algoritmo ad-hoc.
+
+La comunicazione con gli altri microservizi avviene tramite Message Broker come segue:
+- Il microservizio [GestioneCliente](https://github.com/giorgio-hash/GestioneCliente) comunica verso GestioneComanda tramite il topic Kafka NotifyOrderEvent.
+- Il microservizio [GestioneComanda](https://github.com/giorgio-hash/GestioneComanda) comunica verso GestioneCucina tramite il topic Kafka SendOrderEvent.
+- Il microservizio [GestioneCucina](https://github.com/giorgio-hash/GestioneCucina) comunica verso GestioneComanda tramite il topic Kafka NotifyPrepEvent.
+
+La comunicazione con il databse avviene tramite un adapter JPA
+
+Il microservizio è stato implementato seguendo lo stile architetturale esagonale, seguendo lo schema port/adapter, 
+per questo motivo viene strutturato in 3 parti:
+
+- ### Interface
+    Adattatopri ponte tra il mondo esterno e il core del sistema, consentono al microservizio di comunicare con altre applicazioni, servizi o dispositivi esterni in modo         indipendente dall'implementazione interna del sistema stesso. Sono presenti i seguenti Interface Adapter:
+    - EventControllers: SubCucina e SubCliente, permettono la ricezione di messaggi tramite message broker dagli altri microservizi.
+
+- ### Domain
+    Definisce gli oggetti, le entità e le operazioni che sono pertinenti al problema che il microservizio gestisce.
+
+- ### Infrastructure:
+    Adattatori ponte tra il core del sistema e l'infrastruttura esterna, gestendo le chiamate e le operazioni necessarie per accedere e utilizzare le risorse infrastrutturali.     Sono presenti i seguenti Infrastructure Adapters: 
+    - Repository: JPADBAdapter per la comunicazione con il database;
+    - MessageBroker: CucinaPubAdapter per l'invio di messaggi sul topic verso il microservizio della cucina.
+
+## Kafka Web UI
+[Kafdrop](https://github.com/obsidiandynamics/kafdrop) è un'interfaccia utente Web per visualizzare i topic di Kafka
+e sfogliare i gruppi dei consumers.
+Lo strumento visualizza informazioni circa: brokers, topics, partitions, consumers, e consente di visualizzare i messaggi.
+
+Apri un browser e vai all'indirizzo http://localhost:9000.
+
+## Test
+è possibile usufruire di varie API di test per gestire gli ordini oppure per iniettare dell'esterno messaggi verso
+il topic del broker o per fare il percorso opposto e leggere gli ultimi messaggi del topic.
+via [Postman](https://web.postman.co//) tramite l'API all'indirizzo http://localhost:8080/...
+
+## API
+Documentazione completa API : https://documenter.getpostman.com/view/32004409/2sA3JDhkaG
+
 ## Command Line Producer
 Utilizzare il seguente comando per pubblicare sul topic specificato un messaggio
 ```shell
@@ -21,104 +69,3 @@ docker exec --interactive --tty broker kafka-console-consumer --bootstrap-server
 ```shell
 docker exec --interactive --tty broker kafka-console-consumer --bootstrap-server broker:9092 --topic "notifyOrderEvent" --from-beginning
 ```
-
-## Kafka Web UI
-[Kafdrop](https://github.com/obsidiandynamics/kafdrop) è un'interfaccia utente Web per visualizzare i topic di Kafka
-e sfogliare i gruppi dei consumers.
-Lo strumento visualizza informazioni circa: brokers, topics, partitions, consumers, e consente di visualizzare i messaggi.
-
-Apri un browser e vai all'indirizzo http://localhost:9000.
-
-## Test
-è possibile usufruire di varie API di test per gestire gli ordini oppure per iniettare dell'esterno messaggi verso
-il topic del broker o per fare il percorso opposto e leggere gli ultimi messaggi del topic.
-via [Postman](https://web.postman.co//) tramite l'API all'indirizzo http://localhost:8080/...
-### Orders manager
-```http request
-POST /test/order HTTP/1.1
-Host: localhost:8080
-Content-Type: application/json
-Content-Length: 90
-
-{
-    "idComanda":4,
-    "idPiatto":"PIA770",
-    "stato":0,
-    "urgenzaCliente":1
-}
-```
-```http request
-GET /test/order/1 HTTP/1.1
-Host: localhost:8080
-```
-```http request
-PATCH /test/order/1 HTTP/1.1
-Host: localhost:8080
-Content-Type: application/json
-Content-Length: 46
-
-{
-    "stato": 1,
-    "urgenzaCliente": 1
-}
-```
-```http request
-DELETE /test/order/1 HTTP/1.1
-Host: localhost:8080
-```
-```http request
-GET /test/orders/4 HTTP/1.1
-Host: localhost:8080
-```
-### Topic sendOrderEvent
-```http request
-POST /test/sendorderevent HTTP/1.1
-Host: localhost:8080
-Content-Type: application/json
-Content-Length: 150
-
-{
-    "id":1,
-    "idComanda":7,
-    "idPiatto":"SUH724",
-    "stato":1,
-    "urgenzaCliente":0,
-    "tordinazione":"2024-04-25 12:04:57.127"
-}
-``` 
-```http request
-GET /test/sendorderevent HTTP/1.1
-Host: localhost:8080
-``` 
-### Topic notifyOrderEvent
-```http request
-POST /test/notifyorderevent HTTP/1.1
-Host: localhost:8080
-Content-Type: application/json
-Content-Length: 39
-
-{
-    "id" : 2,
-    "idComanda": 7
-}
-``` 
-```http request
-GET /test/notifyorderevent HTTP/1.1
-Host: localhost:8080
-``` 
-### Topic notifyPrepEvent
-```http request
-POST /test/notifyprepevent HTTP/1.1
-Host: localhost:8080
-Content-Type: application/json
-Content-Length: 39
-
-{
-    "id" : 1,
-    "idComanda": 4
-}
-``` 
-```http request
-GET /test/notifyprepevent HTTP/1.1
-Host: localhost:8080
-``` 
