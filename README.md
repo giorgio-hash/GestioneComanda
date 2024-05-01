@@ -31,6 +31,17 @@ per questo motivo viene strutturato in 3 parti:
     - Repository: JPADBAdapter per la comunicazione con il database;
     - MessageBroker: CucinaPubAdapter per l'invio di messaggi sul topic verso il microservizio della cucina.
 
+## Start
+Apri Docker Desktop, apri un terminale e vai alla root directory del progetto e digita:
+```shell
+docker compose up
+```
+Manda in run il microservizio usando qualsiasi IDE oppure tramite Maven con la seguente istruzione:
+```shell
+mvn clean install
+mvn spring-boot:run
+```
+
 ## Kafka Web UI
 [Kafdrop](https://github.com/obsidiandynamics/kafdrop) è un'interfaccia utente Web per visualizzare i topic di Kafka
 e sfogliare i gruppi dei consumers.
@@ -39,33 +50,35 @@ Lo strumento visualizza informazioni circa: brokers, topics, partitions, consume
 Apri un browser e vai all'indirizzo http://localhost:9000.
 
 ## Test
-è possibile usufruire di varie API di test per gestire gli ordini oppure per iniettare dell'esterno messaggi verso
+Il microservizio GestioneComanda è sprovvisto di un componente HTTP Controller nella sua Interfaccia (che contiene solo EventController), viene quindi creato un controller di TEST per interagire direttamente con i componenti del servizio ai soli fini di test.
+E' quindi possibile usufruire di varie API di test per gestire gli ordini oppure per iniettare dell'esterno messaggi verso
 il topic del broker o per fare il percorso opposto e leggere gli ultimi messaggi del topic.
 via [Postman](https://web.postman.co//) tramite l'API all'indirizzo http://localhost:8080/...
 
-## API
-Documentazione completa API : https://documenter.getpostman.com/view/32004409/2sA3JDhkaG
+- ### API di Test
+    Documentazione completa API : https://documenter.getpostman.com/view/32004409/2sA3JDhkaG
 
-## Command Line Producer
-Utilizzare il seguente comando per pubblicare sul topic specificato un messaggio
-```shell
-docker exec --interactive --tty broker kafka-console-producer --bootstrap-server broker:9092 --topic "sendOrderEvent"
-```
-```shell
-docker exec --interactive --tty broker kafka-console-producer --bootstrap-server broker:9092 --topic "notifyPrepEvent"
-```
-```shell
-docker exec --interactive --tty broker kafka-console-producer --bootstrap-server broker:9092 --topic "notifyOrderEvent"
-```
-
-## Command Line Consumer
-Utilizzare il seguente comando per restare in ascolto sul topic specifico
-```shell
-docker exec --interactive --tty broker kafka-console-consumer --bootstrap-server broker:9092 --topic "sendOrderEvent" --from-beginning
-```
-```shell
-docker exec --interactive --tty broker kafka-console-consumer --bootstrap-server broker:9092 --topic "notifyPrepEvent" --from-beginning
-```
-```shell
-docker exec --interactive --tty broker kafka-console-consumer --bootstrap-server broker:9092 --topic "notifyOrderEvent" --from-beginning
-```
+- ### Test dei topic Kafka:
+    - ### Command Line Producer
+        Utilizzare il seguente comando per pubblicare sul topic specificato un messaggio
+        ```shell
+        docker exec --interactive --tty broker kafka-console-producer --bootstrap-server broker:9092 --topic "sendOrderEvent"
+        ```
+        ```shell
+        docker exec --interactive --tty broker kafka-console-producer --bootstrap-server broker:9092 --topic "notifyPrepEvent"
+        ```
+        ```shell
+        docker exec --interactive --tty broker kafka-console-producer --bootstrap-server broker:9092 --topic "notifyOrderEvent"
+        ```
+    
+    - ### Command Line Consumer
+        Utilizzare il seguente comando per restare in ascolto sul topic specifico
+        ```shell
+        docker exec --interactive --tty broker kafka-console-consumer --bootstrap-server broker:9092 --topic "sendOrderEvent" --from-beginning
+        ```
+        ```shell
+        docker exec --interactive --tty broker kafka-console-consumer --bootstrap-server broker:9092 --topic "notifyPrepEvent" --from-beginning
+        ```
+        ```shell
+        docker exec --interactive --tty broker kafka-console-consumer --bootstrap-server broker:9092 --topic "notifyOrderEvent" --from-beginning
+        ```
