@@ -75,6 +75,7 @@ class CucinaPubProducerTests {
         producer.send(ordineDTO);
         String message = objectMapper.writeValueAsString(ordineDTO);
 
+        // configurazione del consumer di Embedded Kafka
         Map<String, Object> consumerProps = KafkaTestUtils.consumerProps("testT", "false", embeddedKafka);
         DefaultKafkaConsumerFactory<Integer, String> cf = new DefaultKafkaConsumerFactory<>(consumerProps);
         Consumer<Integer, String> consumer = cf.createConsumer();
