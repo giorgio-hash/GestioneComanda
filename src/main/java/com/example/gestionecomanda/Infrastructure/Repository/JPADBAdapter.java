@@ -24,8 +24,6 @@ public class JPADBAdapter implements DataPort {
         this.ordineRepository = ordineRepository;
     }
 
-    /* ORDINE */
-
     @Override
     public boolean isOrderExist(int id) {
         return ordineRepository.existsById(id);

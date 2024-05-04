@@ -38,6 +38,7 @@ public class CucinaPubProducer implements MessagePort<OrdineDTO> {
         this.objectMapper = objectMapper;
     }
 
+    @Override
     public void send(OrdineDTO ordineDTO) throws JsonProcessingException {
 
         // Serializza in un oggetto JSON
