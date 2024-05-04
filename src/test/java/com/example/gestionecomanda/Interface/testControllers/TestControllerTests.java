@@ -1,4 +1,4 @@
-package com.example.gestionecomanda.Interface.EventControlles.testControllers;
+package com.example.gestionecomanda.Interface.testControllers;
 
 import com.example.gestionecomanda.Domain.Entity.OrdineEntity;
 import com.example.gestionecomanda.Domain.dto.NotificaOrdineDTO;
