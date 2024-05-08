@@ -82,3 +82,29 @@ via [Postman](https://web.postman.co//) tramite l'API all'indirizzo http://local
         ```shell
         docker exec --interactive --tty broker kafka-console-consumer --bootstrap-server broker:9092 --topic "notifyOrderEvent" --from-beginning
         ```
+
+## Analisi Statica
+### Checkstyle
+In questo progetto è integrato un tool per l'analisi statica:
+[Apache Maven Checkstyle Plugin](https://maven.apache.org/plugins/maven-checkstyle-plugin/index.html)
+Per generare il sito del progetto e i report eseguire:
+```shell
+ ./mvnw site
+ ```
+I file di report si troveranno in ```target/site```, in particolare il file di interesse è
+```checkstyle.html``` che è possibile aprire tramite un qualsiasi browser.
+
+Per poter personalizzare le regole è possibile modificare il file ```checkstyle.xml``` e seguire le indicazioni
+dei commenti in apertura.
+### Script Python
+Inoltre è presente uno script python per generare i file csv e i grafici associati ai report, per poterlo avviare
+è necessario avere python installato sulla propria macchina ed eseguire il seguente comando
+per installare le librerie necessarie:
+```shell
+ pip install -r python/requirements.txt
+ ```
+Succesivamente eseguire il seguente per poter avviare lo script:
+```shell
+ python main.py
+ ```
+I file csv e le immagini png verranno salvati in ```target/output```.
