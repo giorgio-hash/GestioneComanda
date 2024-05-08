@@ -20,7 +20,7 @@ Il microservizio è stato implementato seguendo lo stile architetturale esagonal
 per questo motivo viene strutturato in 3 parti:
 
 - ### Interface
-    Adattatopri ponte tra il mondo esterno e il core del sistema, consentono al microservizio di comunicare con altre applicazioni, servizi o dispositivi esterni in modo         indipendente dall'implementazione interna del sistema stesso. Sono presenti i seguenti Interface Adapter:
+    Adattatori ponte tra il mondo esterno e il core del sistema, consentono al microservizio di comunicare con altre applicazioni, servizi o dispositivi esterni in modo         indipendente dall'implementazione interna del sistema stesso. Sono presenti i seguenti Interface Adapter:
     - EventControllers: SubCucina e SubCliente, permettono la ricezione di messaggi tramite message broker dagli altri microservizi.
 
 - ### Domain
@@ -36,23 +36,31 @@ Apri Docker Desktop, apri un terminale e vai alla root directory del progetto e 
 ```shell
 docker compose up
 ```
-Manda in run il microservizio usando qualsiasi IDE oppure tramite Maven con la seguente istruzione:
+Manda in run il microservizio usando qualsiasi IDE oppure tramite Maven Wrapper con la seguente istruzione:
 ```shell
-mvn clean install
-mvn spring-boot:run
+./mvnw clean install
+./mvnw spring-boot:run
 ```
 
-## Kafka Web UI
+## User Interface
+
+### Kafdrop
 [Kafdrop](https://github.com/obsidiandynamics/kafdrop) è un'interfaccia utente Web per visualizzare i topic di Kafka
 e sfogliare i gruppi dei consumers.
 Lo strumento visualizza informazioni circa: brokers, topics, partitions, consumers, e consente di visualizzare i messaggi.
 
 Apri un browser e vai all'indirizzo http://localhost:9000.
 
+### phpMyAdmin
+[phpMyAdmin](https://www.phpmyadmin.net/) è un'applicazione web che consente di amministrare un database MariaDB tramite un qualsiasi browser.
+
+Apri un browser e vai all'indirizzo http://localhost:3307.
+
 ## Test
 Il microservizio GestioneComanda è sprovvisto di un componente HTTP Controller nella sua Interfaccia (che contiene solo EventController), viene quindi creato un controller di TEST per interagire direttamente con i componenti del servizio ai soli fini di test.
 E' quindi possibile usufruire di varie API di test per gestire gli ordini oppure per iniettare dell'esterno messaggi verso
 il topic del broker o per fare il percorso opposto e leggere gli ultimi messaggi del topic.
+
 via [Postman](https://web.postman.co//) tramite l'API all'indirizzo http://localhost:8080/...
 
 - ### API di Test
@@ -108,3 +116,4 @@ Succesivamente eseguire il seguente per poter avviare lo script:
  python main.py
  ```
 I file csv e le immagini png verranno salvati in ```target/output```.
+
