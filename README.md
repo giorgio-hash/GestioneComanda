@@ -1,4 +1,6 @@
 # Gestione Comanda
+Componente del sistema [ServeEasy](https://github.com/giorgio-hash/ServeEasy.git).
+
 Il microservizio Gestione Comanda si occupa di implementare i seguenti casi d'uso del gruppo sistema:
 
 UC-1 “Gestione Comanda”, dettagliato:
