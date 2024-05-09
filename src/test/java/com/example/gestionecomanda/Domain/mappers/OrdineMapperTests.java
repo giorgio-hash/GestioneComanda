@@ -21,22 +21,26 @@ public class OrdineMapperTests {
 
     @Test
     public void testMapTo(){
-
         OrdineEntity ordineEntity = TestDataUtil.createOrdineEntityA();
         OrdineDTO ordineDTO = ordineMapper.mapTo(ordineEntity);
         assertThat(ordineDTO.getId()).isEqualTo(ordineEntity.getId());
         assertThat(ordineDTO.getIdComanda()).isEqualTo(ordineEntity.getIdComanda());
-
+        assertThat(ordineDTO.getStato()).isEqualTo(ordineEntity.getStato());
+        assertThat(ordineDTO.getIdPiatto()).isEqualTo(ordineEntity.getIdPiatto());
+        assertThat(ordineDTO.getUrgenzaCliente()).isEqualTo(ordineEntity.getUrgenzaCliente());
+        assertThat(ordineDTO.getTOrdinazione()).isEqualTo(ordineEntity.getTOrdinazione());
     }
 
     @Test
     public void testMapFrom(){
-
         OrdineDTO ordineDTO = TestDataUtil.createOrdineDtoB();
         OrdineEntity ordineEntity = ordineMapper.mapFrom(ordineDTO);
         assertThat(ordineEntity.getId()).isEqualTo(ordineDTO.getId());
         assertThat(ordineEntity.getIdComanda()).isEqualTo(ordineDTO.getIdComanda());
-
+        assertThat(ordineEntity.getStato()).isEqualTo(ordineDTO.getStato());
+        assertThat(ordineEntity.getIdPiatto()).isEqualTo(ordineDTO.getIdPiatto());
+        assertThat(ordineEntity.getUrgenzaCliente()).isEqualTo(ordineDTO.getUrgenzaCliente());
+        assertThat(ordineEntity.getTOrdinazione()).isEqualTo(ordineDTO.getTOrdinazione());
     }
 
 }

@@ -60,37 +60,60 @@ Apri un browser e vai all'indirizzo http://localhost:3307.
 Il microservizio GestioneComanda è sprovvisto di un componente HTTP Controller nella sua Interfaccia (che contiene solo EventController), viene quindi creato un controller di TEST per interagire direttamente con i componenti del servizio ai soli fini di test.
 E' quindi possibile usufruire di varie API di test per gestire gli ordini oppure per iniettare dell'esterno messaggi verso
 il topic del broker o per fare il percorso opposto e leggere gli ultimi messaggi del topic.
-via [Postman](https://web.postman.co//) tramite l'API all'indirizzo http://localhost:8080/. (vedi [documentazione completa API]( https://documenter.getpostman.com/view/32004409/2sA3JDhkaG))
 
-### API di Test
-Documentazione completa API : https://documenter.getpostman.com/view/32004409/2sA3JDhkaG
+via [Postman](https://web.postman.co//) tramite l'API all'indirizzo http://localhost:8080/...
 
-### Test dei topic Kafka:
-- ### Command Line Producer
-    Utilizzare il seguente comando per pubblicare sul topic specificato un messaggio
-    ```shell
-    docker exec --interactive --tty broker kafka-console-producer --bootstrap-server broker:9092 --topic "sendOrderEvent"
-    ```
-    ```shell
-    docker exec --interactive --tty broker kafka-console-producer --bootstrap-server broker:9092 --topic "notifyPrepEvent"
-    ```
-    ```shell
-    docker exec --interactive --tty broker kafka-console-producer --bootstrap-server broker:9092 --topic "notifyOrderEvent"
-    ```
+- ### API di Test
+    Documentazione completa API : https://documenter.getpostman.com/view/32004409/2sA3JDhkaG
 
-- ### Command Line Consumer
-    Utilizzare il seguente comando per restare in ascolto sul topic specifico
-    ```shell
-    docker exec --interactive --tty broker kafka-console-consumer --bootstrap-server broker:9092 --topic "sendOrderEvent" --from-beginning
-    ```
-    ```shell
-    docker exec --interactive --tty broker kafka-console-consumer --bootstrap-server broker:9092 --topic "notifyPrepEvent" --from-beginning
-    ```
-    ```shell
-    docker exec --interactive --tty broker kafka-console-consumer --bootstrap-server broker:9092 --topic "notifyOrderEvent" --from-beginning
-    ```
-### Test di integrazione e unità
-E' possibile eseguire i test di integrazione e di unità tramite il Maven Wrapper, che è uno strumento che consente di eseguire i comandi Maven senza dover avere Maven installato globalmente sul sistema, tramite l'istruzione:
+- ### Test dei topic Kafka:
+    - ### Command Line Producer
+        Utilizzare il seguente comando per pubblicare sul topic specificato un messaggio
+        ```shell
+        docker exec --interactive --tty broker kafka-console-producer --bootstrap-server broker:9092 --topic "sendOrderEvent"
+        ```
+        ```shell
+        docker exec --interactive --tty broker kafka-console-producer --bootstrap-server broker:9092 --topic "notifyPrepEvent"
+        ```
+        ```shell
+        docker exec --interactive --tty broker kafka-console-producer --bootstrap-server broker:9092 --topic "notifyOrderEvent"
+        ```
+    
+    - ### Command Line Consumer
+        Utilizzare il seguente comando per restare in ascolto sul topic specifico
+        ```shell
+        docker exec --interactive --tty broker kafka-console-consumer --bootstrap-server broker:9092 --topic "sendOrderEvent" --from-beginning
+        ```
+        ```shell
+        docker exec --interactive --tty broker kafka-console-consumer --bootstrap-server broker:9092 --topic "notifyPrepEvent" --from-beginning
+        ```
+        ```shell
+        docker exec --interactive --tty broker kafka-console-consumer --bootstrap-server broker:9092 --topic "notifyOrderEvent" --from-beginning
+        ```
+
+## Analisi Statica
+### Checkstyle
+In questo progetto è integrato un tool per l'analisi statica:
+[Apache Maven Checkstyle Plugin](https://maven.apache.org/plugins/maven-checkstyle-plugin/index.html)
+Per generare il sito del progetto e i report eseguire:
 ```shell
- ./mvnw clean verify
+ ./mvnw site
  ```
+I file di report si troveranno in ```target/site```, in particolare il file di interesse è
+```checkstyle.html``` che è possibile aprire tramite un qualsiasi browser.
+
+Per poter personalizzare le regole è possibile modificare il file ```checkstyle.xml``` e seguire le indicazioni
+dei commenti in apertura.
+### Script Python
+Inoltre è presente uno script python per generare i file csv e i grafici associati ai report, per poterlo avviare
+è necessario avere python installato sulla propria macchina ed eseguire il seguente comando
+per installare le librerie necessarie:
+```shell
+ pip install -r python/requirements.txt
+ ```
+Succesivamente eseguire il seguente per poter avviare lo script:
+```shell
+ python main.py
+ ```
+I file csv e le immagini png verranno salvati in ```target/output```.
+
