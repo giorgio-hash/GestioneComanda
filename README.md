@@ -106,6 +106,9 @@ I file di report si troveranno in ```target/site```, in particolare il file di i
 
 Per poter personalizzare le regole è possibile modificare il file ```checkstyle.xml``` e seguire le indicazioni
 dei commenti in apertura.
+
+Il report è disponibile grazie a Github pages della repository ServeEasy al seguente link: [checkstyle.html](https://giorgio-hash.github.io/ServeEasy/Report/GestioneComanda/site/checkstyle.html)
+
 ### Script Python
 Inoltre è presente uno script python per generare i file csv e i grafici associati ai report, per poterlo avviare
 è necessario avere python installato sulla propria macchina ed eseguire il seguente comando
@@ -118,4 +121,3 @@ Succesivamente eseguire il seguente per poter avviare lo script:
  python main.py
  ```
 I file csv e le immagini png verranno salvati in ```target/output```.
-
