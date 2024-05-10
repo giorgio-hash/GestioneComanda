@@ -20,6 +20,9 @@ spring:
           use_jdbc_metadata_defaults: false
     hibernate:
       ddl-auto: none #update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl #"forza" ad adottare i nomi di @Table
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
     show-sql: true
   sql:
     init:
