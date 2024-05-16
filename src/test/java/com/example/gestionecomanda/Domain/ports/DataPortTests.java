@@ -68,7 +68,7 @@ public class DataPortTests {
         assertThat(result).isPresent();
         assertThat(result.get()).isEqualTo(savedOrdineEntity);
     }
-/*
+
     @Test
     public void testDeleteOrder() {
         OrdineEntity ordineEntityA = TestDataUtil.createOrdineEntityA();
@@ -77,6 +77,6 @@ public class DataPortTests {
         Optional<OrdineEntity> result = dataPort.getOrderById(savedOrdineEntityA.getId());
         assertThat(result).isEmpty();
     }
-*/
+
 
 }
