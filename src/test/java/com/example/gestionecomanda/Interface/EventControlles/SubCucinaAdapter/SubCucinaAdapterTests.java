@@ -21,6 +21,7 @@ import org.springframework.kafka.support.SendResult;
 import org.springframework.kafka.test.EmbeddedKafkaBroker;
 import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -46,6 +47,8 @@ import static org.junit.jupiter.api.Assertions.*;
         controlledShutdown = false,
         brokerProperties = { "listeners=PLAINTEXT://localhost:9092", "port=9092" },
         topics = {"${spring.kafka.consumer.gestioneCucina.topic}"})
+@Sql({"/db/schema.sql"})
+@Sql(scripts = "/db/clean.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class SubCucinaAdapterTests {
 
     @Autowired
