@@ -1,0 +1,36 @@
+SETUP ANALISI STATICA
+1. accendere la rete docker-compose
+
+2. accedi a interfaccia localhost:9000
+        - username iniziale: admin
+        - password iniziale: admin
+        - ti verrà richiesto di cambiare la password
+
+3. crea un nuovo progetto locale
+        - imposta nomi come vuoi, sono semplici identificativi.
+        - imposta il tuo branch
+
+4. genera token e salvato in un .txt (ricorda di escluderlo dai commit)
+
+5. specifica "maven" e copia il comando
+
+6. rimuovi i caratteri "\" e trasforma il comando in una singola linea
+        - consiglio: salva il comando in un file .bat oppure esegui in CMD
+        - nel caso .bat, ricorda di escluderlo dal git commit
+        - (raccomandato) Per il setting dello scanner utilizzare token_set_sonarqube.bat . Genera automaticamente scan.bat.
+
+7. esegui e (consiglio)refresha la pagina localhost:9000
+
+
+
+
+
+Il comando deve avere questa forma:
+
+.\mvnw clean verify site spotbugs:spotbugs  sonar:sonar -Dsonar.projectKey=nome_progetto  -Dsonar.projectName='nome_progetto' -Dsonar.host.url=http://localhost:9000 -Dsonar.token_sonarqube=token_sonarqube -Dsonar.java.pmd.reportPaths=/target/pmd.xml -Dsonar.java.checkstyle.reportPaths=/target/checkstyle-result.xml -Dsonar.java.spotbugs.reportPaths=/target/spotbugsXml.xml
+
+dove
+token_sonarqube è il token generato da SonarQube
+nome_progetto è il nome del progetto da scannerizzare
+N.B.: il comando funziona solo su Windows CMD, non funziona su PowerShell.
+
