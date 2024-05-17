@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Questa classe è un test di integrazione che utilizza un'istanza Embedded Kafka.
- * @EmbeddedKafka inietta una istanza di EmbeddedKafkaBroker nella nostra classe di test.
+ * /@EmbeddedKafka inietta una istanza di EmbeddedKafkaBroker nella nostra classe di test.
  * Embedded Kafka è una libreria che fornisce istanze di Kafka e Confluent Schema Registry in memoria
  * per eseguire i test, in modo da non dipendere da un server Kafka esterno.
  *

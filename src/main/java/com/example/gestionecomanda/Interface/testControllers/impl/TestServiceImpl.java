@@ -68,7 +68,6 @@ public class TestServiceImpl implements TestService {
      *
      * @param payload oggetto serializzato da inviare
      * @param topic topic su quale inviare il messaggio
-     * @throws JsonProcessingException
      */
     @Override
     public void sendMessageToTopic(String payload, String topic) {
