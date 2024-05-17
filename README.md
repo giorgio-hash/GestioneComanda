@@ -51,7 +51,7 @@ Manda in run il microservizio usando qualsiasi IDE oppure tramite Maven Wrapper 
 e sfogliare i gruppi dei consumers.
 Lo strumento visualizza informazioni circa: brokers, topics, partitions, consumers, e consente di visualizzare i messaggi.
 
-Apri un browser e vai all'indirizzo http://localhost:9000.
+Apri un browser e vai all'indirizzo http://localhost:9001.
 
 ### phpMyAdmin
 [phpMyAdmin](https://www.phpmyadmin.net/) è un'applicazione web che consente di amministrare un database MariaDB tramite un qualsiasi browser.
@@ -121,3 +121,25 @@ Succesivamente eseguire il seguente per poter avviare lo script:
  python main.py
  ```
 I file csv e le immagini png verranno salvati in ```target/output```.
+
+### Sonarqube
+[SonarQube](https://www.sonarsource.com/products/sonarqube/) è uno strumento open source di Continuous Inspection 
+per il controllo della qualità del codice. 
+Analizza il codice sorgente per individuare bug, vulnerabilità, code smell e problemi di mantenibilità. 
+Fornisce un'analisi dettagliata del codice e suggerisce miglioramenti per garantire che il codice sia di alta qualità, 
+sicuro e mantenibile.
+
+All'inerno della nostra applicazione è stato implementato in un container docker, 
+disponibile in localhost all'indirizzo  http://localhost:9000 .
+
+Seguire le seguenti istruzioni per poter utilizzare Sonaqube:
+
+- accedere all'interfaccia [localhost:9000](http://localhost:9000)
+- inserire user e pasword iniziali (username: admin / password: admin);
+- modicare la propria password con una propria locale;
+- creare un nuovo progetto locale impostando nomi e branch desiderati;
+- generare un **token** locale e specificare maven come proprio framework;
+- lanciare su cmd il seguente comando:
+```shell
+./mvnw clean verify sonar:sonar -Dsonar.projectKey=GestioneCliente -Dsonar.projectName='GestioneCliente' -Dsonar.host.url=http://localhost:9000 -Dsonar.token=[INSERIRE_PROPRIO_TOKEN_SONARQUBE]
+ ```
