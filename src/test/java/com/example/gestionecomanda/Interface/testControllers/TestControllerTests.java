@@ -18,6 +18,7 @@ import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.test.EmbeddedKafkaBroker;
 import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -37,6 +38,8 @@ import static com.example.gestionecomanda.util.TestUtil.formattedTimestamp;
         topics = {"${spring.kafka.producer.topic}",
                 "${spring.kafka.consumer.gestioneCliente.topic}" ,
                 "${spring.kafka.consumer.gestioneCucina.topic}" })
+@Sql({"/db/schema.sql"})
+@Sql(scripts = "/db/clean.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 @AutoConfigureMockMvc
 public class TestControllerTests {
 
