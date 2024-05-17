@@ -32,7 +32,7 @@ services:
     container_name: kafdrop
     restart: "no"
     ports:
-      - "9000:9000"
+      - "9001:9000"
     environment:
       KAFKA_BROKERCONNECT: "broker:29092"
     depends_on:
