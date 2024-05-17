@@ -141,5 +141,5 @@ Seguire le seguenti istruzioni per poter utilizzare Sonaqube:
 - generare un **token** locale e specificare maven come proprio framework;
 - lanciare su cmd il seguente comando:
 ```shell
-./mvnw clean verify sonar:sonar -Dsonar.projectKey=GestioneCliente -Dsonar.projectName='GestioneCliente' -Dsonar.host.url=http://localhost:9000 -Dsonar.token=[INSERIRE_PROPRIO_TOKEN_SONARQUBE]
+./mvnw clean verify sonar:sonar -Dsonar.projectKey=GestioneComanda -Dsonar.projectName='GestioneCliente' -Dsonar.host.url=http://localhost:9000 -Dsonar.token=[INSERIRE_PROPRIO_TOKEN_SONARQUBE]
  ```
